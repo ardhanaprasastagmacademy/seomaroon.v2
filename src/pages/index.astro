@@ -1,0 +1,256 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { LandingNavbar } from '@/components/landing/LandingNavbar';
+import { LandingHeroCta } from '@/components/landing/LandingHeroCta';
+import {
+  Sparkles,
+  ArrowRight,
+  FileSpreadsheet,
+  Layers,
+  FileCode,
+  Boxes,
+  Zap,
+  CheckCircle2,
+  ShieldCheck,
+  TrendingUp,
+  Cpu,
+  Download,
+  FolderKanban,
+  Check
+} from 'lucide-react';
+---
+
+<BaseLayout
+  title="SEO Prompt Studio — SEO Content & Prompt Operating System"
+  description="Platform operasi konten SEO & Prompt Engineering #1: Ubah Excel Content Calendar menjadi puluhan Master Prompt SEO AEO GEO siap pakai dalam hitungan detik."
+  isAppLayout={false}
+>
+  <!-- Navigation Header with Login / Register Trigger -->
+  <LandingNavbar client:only="react" />
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden pt-16 pb-24 lg:pt-24 lg:pb-32">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      <!-- Tag Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3.5 py-1 text-xs font-bold text-blue-700 dark:border-blue-900/60 dark:bg-blue-950/50 dark:text-blue-300">
+        <Sparkles className="h-3.5 w-3.5" />
+        <span>SEO Content & Prompt Operating System v1.0</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="mt-6 text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl lg:text-7xl">
+        Ubah Excel Content Calendar Menjadi <br class="hidden sm:block" />
+        <span class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          Master Prompt SEO Siap Pakai
+        </span>
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="mx-auto mt-6 max-w-3xl text-base text-slate-600 dark:text-slate-300 sm:text-lg leading-relaxed">
+        Hentikan copy-paste manual yang rawan salah. Hubungkan 30 hari content calendar Anda, pilih template SEO/AEO/GEO (04–40), dan biarkan engine mengisinya secara otomatis ke format Markdown, JSON, YAML, atau ZIP instan.
+      </p>
+
+      <!-- CTA Buttons Triggering Login / Register Modal -->
+      <LandingHeroCta client:only="react" />
+
+      <!-- Highlights Micro-bar -->
+      <div class="mt-12 flex flex-wrap items-center justify-center gap-6 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <div class="flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+          <span>SheetJS Multi-Sheet Parser</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+          <span>Immutable Template 04–40</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+          <span>AI Query Fan-Out & Schema</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+          <span>Batch ZIP Export</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Workflow Showcase (PRD Section 4 & 84) -->
+    <div id="workflow" class="mx-auto mt-16 max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-900 p-6 shadow-2xl dark:border-slate-800 sm:p-10">
+        <div class="mb-6 flex items-center justify-between border-b border-slate-800 pb-4 text-slate-400">
+          <div class="flex items-center gap-2">
+            <div class="h-3 w-3 rounded-full bg-red-500/80"></div>
+            <div class="h-3 w-3 rounded-full bg-amber-500/80"></div>
+            <div class="h-3 w-3 rounded-full bg-emerald-500/80"></div>
+            <span class="ml-2 font-mono text-xs text-slate-400">seo-prompt-os // end-to-end-pipeline</span>
+          </div>
+          <span class="rounded bg-blue-900/60 px-2 py-0.5 font-mono text-[10px] text-blue-300">
+            AUTO-MAPPING ACTIVE
+          </span>
+        </div>
+
+        {/* Workflow Diagram Grid */}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 text-center">
+          <div class="rounded-2xl border border-slate-800 bg-slate-850/70 p-4 transition-all hover:border-emerald-500/50">
+            <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
+              <FileSpreadsheet className="h-5 w-5" />
+            </div>
+            <span class="mt-3 block text-[10px] font-bold text-slate-400 uppercase">Tahap 1</span>
+            <h4 class="font-bold text-white text-xs">Excel Import</h4>
+            <p class="mt-1 text-[11px] text-slate-400">Membaca 90 artikel dari sheet kalender</p>
+          </div>
+
+          <div class="rounded-2xl border border-slate-800 bg-slate-850/70 p-4 transition-all hover:border-blue-500/50">
+            <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/20 text-blue-400">
+              <Layers className="h-5 w-5" />
+            </div>
+            <span class="mt-3 block text-[10px] font-bold text-slate-400 uppercase">Tahap 2</span>
+            <h4 class="font-bold text-white text-xs">Select Template</h4>
+            <p class="mt-1 text-[11px] text-slate-400">Template 04-40 (SEO/AEO/GEO)</p>
+          </div>
+
+          <div class="rounded-2xl border border-slate-800 bg-slate-850/70 p-4 transition-all hover:border-purple-500/50">
+            <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400">
+              <Zap className="h-5 w-5" />
+            </div>
+            <span class="mt-3 block text-[10px] font-bold text-slate-400 uppercase">Tahap 3</span>
+            <h4 class="font-bold text-white text-xs">AI & Auto-Fill</h4>
+            <p class="mt-1 text-[11px] text-slate-400">Intent, Fan-Out, Outline & Schema</p>
+          </div>
+
+          <div class="rounded-2xl border border-slate-800 bg-slate-850/70 p-4 transition-all hover:border-amber-500/50">
+            <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400">
+              <FileCode className="h-5 w-5" />
+            </div>
+            <span class="mt-3 block text-[10px] font-bold text-slate-400 uppercase">Tahap 4</span>
+            <h4 class="font-bold text-white text-xs">Formatter</h4>
+            <p class="mt-1 text-[11px] text-slate-400">Konversi ke JSON, YAML, TXT</p>
+          </div>
+
+          <div class="rounded-2xl border border-slate-800 bg-slate-850/70 p-4 transition-all hover:border-indigo-500/50">
+            <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400">
+              <Boxes className="h-5 w-5" />
+            </div>
+            <span class="mt-3 block text-[10px] font-bold text-slate-400 uppercase">Tahap 5</span>
+            <h4 class="font-bold text-white text-xs">Bulk ZIP Export</h4>
+            <p class="mt-1 text-[11px] text-slate-400">1-Klik unduh puluhan file .md/.json</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem vs Solution Comparison (PRD Section 3 & 4) -->
+  <section class="border-y border-slate-200 bg-white py-20 dark:border-slate-800 dark:bg-slate-900">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h2 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl">
+          Mengapa Workflow Manual Menghambat Tim SEO Anda?
+        </h2>
+        <p class="mt-3 text-sm text-slate-500">
+          Perbandingan efisiensi cara lama vs SEO Content & Prompt Operating System.
+        </p>
+      </div>
+
+      <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+        {/* Old Way */}
+        <div class="rounded-2xl border border-red-200 bg-red-50/40 p-6 dark:border-red-950 dark:bg-red-950/20">
+          <div class="flex items-center gap-2 text-red-600 dark:text-red-400">
+            <span class="text-sm font-bold uppercase tracking-wider">Cara Lama (Manual & Lambat)</span>
+          </div>
+          <ul class="mt-4 space-y-3 text-xs text-slate-700 dark:text-slate-300">
+            <li class="flex items-start gap-2.5">
+              <span class="mt-0.5 text-red-500 font-bold">&times;</span>
+              <span>Buka Excel &rarr; copy judul artikel satu per satu &rarr; cari template prompt</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="mt-0.5 text-red-500 font-bold">&times;</span>
+              <span>Ganti placeholder secara manual satu per satu yang rawan salah ketik</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="mt-0.5 text-red-500 font-bold">&times;</span>
+              <span>Struktur template mudah rusak atau terpotong tanpa sengaja</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="mt-0.5 text-red-500 font-bold">&times;</span>
+              <span>Memakan waktu berjam-jam untuk memproses 30 hari content calendar</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="mt-0.5 text-red-500 font-bold">&times;</span>
+              <span>Tidak ada histori prompt terpusat dan sulit dikolaborasikan dengan tim</span>
+            </li>
+          </ul>
+        </div>
+
+        {/* New Way */}
+        <div class="rounded-2xl border border-emerald-200 bg-emerald-50/40 p-6 dark:border-emerald-950 dark:bg-emerald-950/20">
+          <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+            <CheckCircle2 className="h-5 w-5" />
+            <span class="text-sm font-bold uppercase tracking-wider">SEO Prompt Studio (Otomatis & Cepat)</span>
+          </div>
+          <ul class="mt-4 space-y-3 text-xs text-slate-700 dark:text-slate-300">
+            <li class="flex items-start gap-2.5">
+              <Check className="mt-0.5 h-4 w-4 text-emerald-600 flex-shrink-0" />
+              <span>Import file Excel langsung membaca sheet dan mendeteksi semua kolom kalender</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <Check className="mt-0.5 h-4 w-4 text-emerald-600 flex-shrink-0" />
+              <span>Auto-Mapping data artikel langsung ke placeholder template tanpa ketik ulang</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <Check className="mt-0.5 h-4 w-4 text-emerald-600 flex-shrink-0" />
+              <span>Jaminan Template Immutable: 100% mempertahankan integritas instruksi dan heading</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <Check className="mt-0.5 h-4 w-4 text-emerald-600 flex-shrink-0" />
+              <span>Bulk Generator memproses 90 artikel menjadi ZIP hanya dalam 5 detik</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <Check className="mt-0.5 h-4 w-4 text-emerald-600 flex-shrink-0" />
+              <span>Histori tersimpan otomatis di database dengan dukungan sinkronisasi Supabase PostgreSQL</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 py-16 text-white text-center">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-extrabold sm:text-4xl">
+        Siap Mengakselerasi Operasi Konten SEO Anda?
+      </h2>
+      <p class="mt-3 text-sm text-blue-100 max-w-2xl mx-auto leading-relaxed">
+        Jelajahi kalender 90 artikel dan coba buat prompt artikel pertama Anda di Prompt Studio sekarang juga.
+      </p>
+      <div class="mt-8 flex justify-center gap-4">
+        <a
+          href="/prompt-builder"
+          class="flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-sm font-bold text-blue-700 shadow-xl hover:bg-blue-50"
+        >
+          <Sparkles className="h-4 w-4" />
+          <span>Buka Prompt Studio Sekarang</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-950">
+    <div class="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 font-bold text-slate-800 dark:text-white">
+        <div class="h-6 w-6 rounded-md bg-blue-600 text-white flex items-center justify-center">
+          <Sparkles className="h-3.5 w-3.5" />
+        </div>
+        <span>SEO Prompt Studio &copy; 2026</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="/features" class="hover:text-blue-600">Features</a>
+        <a href="/templates" class="hover:text-blue-600">Template Directory</a>
+        <a href="/pricing" class="hover:text-blue-600">Pricing</a>
+        <a href="/dashboard" class="hover:text-blue-600">App Dashboard</a>
+      </div>
+    </div>
+  </footer>
+</BaseLayout>

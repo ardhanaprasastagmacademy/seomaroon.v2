@@ -1,0 +1,12 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { BulkGeneratorView } from '@/components/bulk/BulkGeneratorView';
+---
+
+<BaseLayout
+  title="Bulk Generator — SEO Content & Prompt Operating System"
+  description="Generate puluhan prompt SEO sekaligus dari Content Calendar dan unduh langsung dalam arsip .ZIP."
+  activePage="/bulk"
+>
+  <BulkGeneratorView client:load />
+</BaseLayout>

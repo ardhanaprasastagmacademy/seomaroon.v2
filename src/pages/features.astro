@@ -1,0 +1,101 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import {
+  FileSpreadsheet,
+  Layers,
+  Sparkles,
+  FileCode,
+  Boxes,
+  Database,
+  ShieldCheck,
+  Zap,
+  ArrowRight
+} from 'lucide-react';
+import { LandingNavbar } from '@/components/landing/LandingNavbar';
+---
+
+<BaseLayout
+  title="Fitur Lengkap — SEO Content & Prompt Operating System"
+  description="Jelajahi seluruh fitur unggulan SEO Prompt Studio: SheetJS Excel Importer, Auto-Mapping Placeholder Engine, Immutable Template 04-40, Formatter JSON/YAML, dan Batch ZIP Export."
+  isAppLayout={false}
+>
+  <LandingNavbar client:only="react" />
+
+  <main class="py-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 dark:bg-blue-900/60 dark:text-blue-300">
+          Operating System Capabilities
+        </span>
+        <h1 class="mt-4 text-3xl font-black tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+          Dirancang Khusus untuk Profesional & Agensi SEO
+        </h1>
+        <p class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
+          Arsitektur lengkap dari import kalender Excel, auto-mapping, derived AI engine, hingga ekspor multi-format.
+        </p>
+      </div>
+
+      <div class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400">
+            <FileSpreadsheet className="h-6 w-6" />
+          </div>
+          <h3 class="mt-4 text-base font-bold text-slate-900 dark:text-white">Excel Importer Cerdas</h3>
+          <p class="mt-2 text-xs text-slate-600 leading-relaxed dark:text-slate-400">
+            Membaca sheet "Kalender Konten 30 Hari", mendeteksi header secara fuzzy, validasi baris real-time, dan menyimpan langsung ke database.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400">
+            <Layers className="h-6 w-6" />
+          </div>
+          <h3 class="mt-4 text-base font-bold text-slate-900 dark:text-white">40 Master Prompt Templates</h3>
+          <p class="mt-2 text-xs text-slate-600 leading-relaxed dark:text-slate-400">
+            Koleksi template spesifik industri (SEO AEO GEO Master #04, Refresh #05, Pillar Hub #06, Comparison #07, Local SEO #11, E-Commerce #15, dll.).
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-400">
+            <Zap className="h-6 w-6" />
+          </div>
+          <h3 class="mt-4 text-base font-bold text-slate-900 dark:text-white">AI Query Fan-Out & Schema</h3>
+          <p class="mt-2 text-xs text-slate-600 leading-relaxed dark:text-slate-400">
+            Menghasilkan minimal 5 pertanyaan fan-out, deteksi Search Intent otomatis, inferensi Persona Audiens, dan rekomendasi Schema.org.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400">
+            <FileCode className="h-6 w-6" />
+          </div>
+          <h3 class="mt-4 text-base font-bold text-slate-900 dark:text-white">Prompt Formatter Serbaguna</h3>
+          <p class="mt-2 text-xs text-slate-600 leading-relaxed dark:text-slate-400">
+            Mengonversi prompt Markdown ke JSON Structured (metadata, input, instructions, output), JSON Raw, YAML, atau TXT tanpa merusak format.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-400">
+            <Boxes className="h-6 w-6" />
+          </div>
+          <h3 class="mt-4 text-base font-bold text-slate-900 dark:text-white">Bulk Generation & ZIP Export</h3>
+          <p class="mt-2 text-xs text-slate-600 leading-relaxed dark:text-slate-400">
+            Generate 90 prompt artikel sekaligus dengan progress bar real-time dan unduh sebagai arsip SEO-Prompts.zip siap pakai.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400">
+            <Database className="h-6 w-6" />
+          </div>
+          <h3 class="mt-4 text-base font-bold text-slate-900 dark:text-white">Supabase PostgreSQL Ready</h3>
+          <p class="mt-2 text-xs text-slate-600 leading-relaxed dark:text-slate-400">
+            Mendukung penyimpanan lokal reaktif sekaligus sinkronisasi cloud Supabase dengan Row Level Security (RLS) terpasang.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+</BaseLayout>

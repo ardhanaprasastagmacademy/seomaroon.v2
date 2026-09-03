@@ -1,0 +1,12 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { ContentCalendarView } from '@/components/calendar/ContentCalendarView';
+---
+
+<BaseLayout
+  title="Content Calendar — SEO Content & Prompt Operating System"
+  description="Kalender konten SEO 30 hari dengan auto-mapping ke template prompt dan live multi-sheet Excel parser."
+  activePage="/calendar"
+>
+  <ContentCalendarView client:load />
+</BaseLayout>

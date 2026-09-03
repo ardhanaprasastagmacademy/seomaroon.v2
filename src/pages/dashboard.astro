@@ -1,0 +1,12 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { DashboardOverview } from '@/components/dashboard/DashboardOverview';
+---
+
+<BaseLayout
+  title="Dashboard — SEO Content & Prompt Operating System"
+  description="Pusat kendali dan ringkasan metrik SEO Content Calendar, project, prompt templates, dan histori ekspor."
+  activePage="/dashboard"
+>
+  <DashboardOverview client:load />
+</BaseLayout>

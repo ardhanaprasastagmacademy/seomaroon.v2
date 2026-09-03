@@ -1,0 +1,12 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { PromptFormatterView } from '@/components/formatter/PromptFormatterView';
+---
+
+<BaseLayout
+  title="Prompt Formatter — SEO Content & Prompt Operating System"
+  description="Konversi prompt Markdown ke JSON Structured, JSON Raw, YAML, dan TXT dengan syntax highlighting dan export 1-klik."
+  activePage="/formatter"
+>
+  <PromptFormatterView client:load />
+</BaseLayout>

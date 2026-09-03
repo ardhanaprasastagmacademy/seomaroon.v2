@@ -1,0 +1,8 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { AuthCallback } from '@/components/auth/AuthCallback';
+---
+
+<BaseLayout title="Verifikasi Login Google — SEO OS" activePage="/auth/callback">
+  <AuthCallback client:only="react" />
+</BaseLayout>

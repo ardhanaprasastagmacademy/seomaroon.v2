@@ -1,0 +1,12 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { ProjectManager } from '@/components/projects/ProjectManager';
+---
+
+<BaseLayout
+  title="Projects — SEO Content & Prompt Operating System"
+  description="Kelola multi-project, informasi brand, parameter SEO, dan CTA per bisnis atau klien."
+  activePage="/projects"
+>
+  <ProjectManager client:load />
+</BaseLayout>

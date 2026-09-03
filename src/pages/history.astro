@@ -1,0 +1,12 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { PromptHistoryView } from '@/components/history/PromptHistoryView';
+---
+
+<BaseLayout
+  title="Histori Prompt — SEO Content & Prompt Operating System"
+  description="Daftar seluruh prompt yang pernah di-generate, draf aktif, dan arsip ekspor berkas."
+  activePage="/history"
+>
+  <PromptHistoryView client:load />
+</BaseLayout>
