@@ -82,10 +82,13 @@ const PromptHistoryViewInner: React.FC = () => {
     saveFile(blob, `${cleanTitle}.md`);
   };
 
-  const handleDelete = (id: string, e: React.MouseEvent) => {
+  const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirm('Hapus histori prompt ini dari database?')) {
-      store.deleteGeneratedPrompt(id);
+      const result = await store.deleteGeneratedPrompt(id);
+      if (!result.success && result.error) {
+        alert(`Prompt dihapus secara lokal, namun gagal menghapus dari Supabase: ${result.error}`);
+      }
     }
   };
 

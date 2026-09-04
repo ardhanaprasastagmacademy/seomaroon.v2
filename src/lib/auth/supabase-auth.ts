@@ -1,7 +1,9 @@
 import { createClient, type SupabaseClient, type User, type Session } from '@supabase/supabase-js';
 
-const SUPABASE_URL = (import.meta as any).env?.PUBLIC_SUPABASE_URL || 'https://wycnbdiivphkpwsfwcvj.supabase.co';
-const SUPABASE_ANON_KEY = (import.meta as any).env?.PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5Y25iZGlpdnBoa3B3c2Z3Y3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0Mjk1OTgsImV4cCI6MjEwNDAwNTU5OH0.iCpG72WB1KN-jxGue_g-YlZsK-1coGMgHMwdTxKRiKY';
+const rawUrl = (import.meta as any).env?.PUBLIC_SUPABASE_URL || 'https://wycnbdiivphkpwsfwcvj.supabase.co';
+const rawKey = (import.meta as any).env?.PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5Y25iZGlpdnBoa3B3c2Z3Y3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0Mjk1OTgsImV4cCI6MjEwNDAwNTU5OH0.iCpG72WB1KN-jxGue_g-YlZsK-1coGMgHMwdTxKRiKY';
+const SUPABASE_URL = String(rawUrl).trim();
+const SUPABASE_ANON_KEY = String(rawKey).trim();
 
 // Create Supabase client — used for data sync operations only (no login required)
 export const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {

@@ -29,6 +29,7 @@ const ProjectManagerInner: React.FC = () => {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Form fields
   const [formData, setFormData] = useState({
@@ -121,11 +122,21 @@ const ProjectManagerInner: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleDelete = (id: string, e: React.MouseEvent) => {
+  const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm('Hapus project ini beserta data kalender terkait?')) {
-      store.deleteProject(id);
-      loadData(false);
+    if (confirm('Hapus project ini beserta data kalender dan prompt terkait? Data juga akan langsung dihapus dari database Supabase.')) {
+      setDeletingId(id);
+      try {
+        const result = await store.deleteProject(id);
+        if (!result.success && result.error) {
+          alert(`Project telah dihapus secara lokal, namun gagal menghapus dari Supabase: ${result.error}`);
+        }
+      } catch (err: any) {
+        console.error('Gagal menghapus project:', err);
+      } finally {
+        setDeletingId(null);
+        loadData(false);
+      }
     }
   };
 
@@ -288,10 +299,17 @@ const ProjectManagerInner: React.FC = () => {
 
                     <button
                       onClick={(e) => handleDelete(p.id, e)}
-                      className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/50"
-                      title="Hapus Project"
+                      disabled={deletingId === p.id}
+                      className={`rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/50 ${
+                        deletingId === p.id ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
+                      title="Hapus Project & Database Supabase"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      {deletingId === p.id ? (
+                        <RefreshCw className="h-3.5 w-3.5 animate-spin text-red-500" />
+                      ) : (
+                        <Trash2 className="h-3.5 w-3.5" />
+                      )}
                     </button>
                   </div>
                 </div>

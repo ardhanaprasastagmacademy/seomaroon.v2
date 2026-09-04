@@ -225,10 +225,13 @@ const ContentCalendarInner: React.FC = () => {
     setSelectedArticleIds(next);
   };
 
-  const handleDeleteArticle = (id: string, e: React.MouseEvent) => {
+  const handleDeleteArticle = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirm('Hapus artikel ini dari content calendar dan database Supabase?')) {
-      store.deleteArticle(id);
+      const result = await store.deleteArticle(id);
+      if (!result.success && result.error) {
+        alert(`Artikel dihapus secara lokal, namun gagal menghapus dari Supabase: ${result.error}`);
+      }
     }
   };
 

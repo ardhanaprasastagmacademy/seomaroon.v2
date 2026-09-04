@@ -357,8 +357,11 @@ class AppStore {
     return this.projects[idx]!;
   }
 
-  public deleteProject(id: string) {
+  public async deleteProject(id: string): Promise<{ success: boolean; error?: string }> {
     this.init();
+    const projectToDelete = this.projects.find(p => p.id === id);
+
+    // 1. Remove from local store & localStorage
     this.projects = this.projects.filter(p => p.id !== id);
     if (this.activeProjectId === id) {
       this.activeProjectId = this.projects[0]?.id || '';
@@ -367,33 +370,77 @@ class AppStore {
       }
     }
 
-    // Clean up calendar articles for this project
+    // Clean up calendar articles for this project locally
     this.calendar = this.calendar.filter(a => a.project_id !== id);
     this.saveCalendarToStorage();
 
-    // Clean up prompts for this project
+    // Clean up prompts for this project locally
     this.generatedPrompts = this.generatedPrompts.filter(p => p.project_id !== id);
     this.saveGeneratedPromptsToStorage();
 
     this.saveProjectsToStorage();
     this.notify();
 
-    // Sync delete to Supabase if client is ready
-    if (this.supabaseClient && isValidUUID(id)) {
-      this.supabaseClient
-        .from('content_calendar')
-        .delete()
-        .eq('project_id', id)
-        .then(() => {})
-        .catch(console.error);
+    // 2. Direct Sync delete to Supabase Cloud Database
+    if (this.supabaseClient) {
+      try {
+        let dbProjectId: string | null = isValidUUID(id) ? id : null;
 
-      this.supabaseClient
-        .from('projects')
-        .delete()
-        .eq('id', id)
-        .then(() => {})
-        .catch(console.error);
+        // If not a valid UUID, search by project name in Supabase
+        if (!dbProjectId && projectToDelete?.name) {
+          const { data: found } = await this.supabaseClient
+            .from('projects')
+            .select('id')
+            .eq('name', projectToDelete.name)
+            .maybeSingle();
+          if (found?.id && isValidUUID(found.id)) {
+            dbProjectId = found.id;
+          }
+        }
+
+        if (dbProjectId) {
+          // Delete child records first to prevent foreign key constraint violations
+          const { error: promptErr } = await this.supabaseClient
+            .from('generated_prompts')
+            .delete()
+            .eq('project_id', dbProjectId);
+          if (promptErr) {
+            console.warn('Supabase delete generated_prompts warning:', promptErr.message);
+          }
+
+          const { error: calErr } = await this.supabaseClient
+            .from('content_calendar')
+            .delete()
+            .eq('project_id', dbProjectId);
+          if (calErr) {
+            console.warn('Supabase delete content_calendar warning:', calErr.message);
+          }
+
+          const { error: projErr } = await this.supabaseClient
+            .from('projects')
+            .delete()
+            .eq('id', dbProjectId);
+
+          if (projErr) {
+            console.error('Supabase delete project error:', projErr.message);
+            return { success: false, error: projErr.message };
+          }
+        } else if (projectToDelete?.name) {
+          // Fallback delete by name if no UUID matched
+          await this.supabaseClient
+            .from('projects')
+            .delete()
+            .eq('name', projectToDelete.name);
+        }
+
+        return { success: true };
+      } catch (err: any) {
+        console.error('Error deleting project from Supabase:', err);
+        return { success: false, error: err?.message || 'Gagal menghapus project dari Supabase' };
+      }
     }
+
+    return { success: true };
   }
 
   // --- Calendar Methods ---
@@ -552,7 +599,7 @@ class AppStore {
     return this.calendar[idx]!;
   }
 
-  public deleteArticle(id: string) {
+  public async deleteArticle(id: string): Promise<{ success: boolean; error?: string }> {
     this.init();
     this.calendar = this.calendar.filter(a => a.id !== id);
     this.saveCalendarToStorage();
@@ -560,16 +607,32 @@ class AppStore {
 
     // Sync delete to Supabase
     if (this.supabaseClient && isValidUUID(id)) {
-      this.supabaseClient
-        .from('content_calendar')
-        .delete()
-        .eq('id', id)
-        .then(() => {})
-        .catch(console.error);
+      try {
+        // Delete linked generated prompts first
+        await this.supabaseClient
+          .from('generated_prompts')
+          .delete()
+          .eq('content_id', id);
+
+        const { error } = await this.supabaseClient
+          .from('content_calendar')
+          .delete()
+          .eq('id', id);
+
+        if (error) {
+          console.error('Supabase delete article error:', error.message);
+          return { success: false, error: error.message };
+        }
+        return { success: true };
+      } catch (err: any) {
+        console.error('Error deleting article from Supabase:', err);
+        return { success: false, error: err?.message };
+      }
     }
+    return { success: true };
   }
 
-  public clearCalendar(projectId?: string) {
+  public async clearCalendar(projectId?: string): Promise<{ success: boolean; error?: string }> {
     this.init();
     const targetProjId = projectId || this.activeProjectId;
     this.calendar = this.calendar.filter(a => a.project_id !== targetProjId);
@@ -578,13 +641,29 @@ class AppStore {
 
     // Sync clear to Supabase
     if (this.supabaseClient && isValidUUID(targetProjId)) {
-      this.supabaseClient
-        .from('content_calendar')
-        .delete()
-        .eq('project_id', targetProjId)
-        .then(() => {})
-        .catch(console.error);
+      try {
+        // Delete linked generated prompts for this project
+        await this.supabaseClient
+          .from('generated_prompts')
+          .delete()
+          .eq('project_id', targetProjId);
+
+        const { error } = await this.supabaseClient
+          .from('content_calendar')
+          .delete()
+          .eq('project_id', targetProjId);
+
+        if (error) {
+          console.error('Supabase clear calendar error:', error.message);
+          return { success: false, error: error.message };
+        }
+        return { success: true };
+      } catch (err: any) {
+        console.error('Error clearing calendar from Supabase:', err);
+        return { success: false, error: err?.message };
+      }
     }
+    return { success: true };
   }
 
   // --- Template Methods ---
@@ -754,20 +833,30 @@ class AppStore {
     return newPrompt;
   }
 
-  public deleteGeneratedPrompt(id: string) {
+  public async deleteGeneratedPrompt(id: string): Promise<{ success: boolean; error?: string }> {
     this.init();
     this.generatedPrompts = this.generatedPrompts.filter(p => p.id !== id);
     this.saveGeneratedPromptsToStorage();
     this.notify();
 
     if (this.supabaseClient && isValidUUID(id)) {
-      this.supabaseClient
-        .from('generated_prompts')
-        .delete()
-        .eq('id', id)
-        .then(() => {})
-        .catch(console.error);
+      try {
+        const { error } = await this.supabaseClient
+          .from('generated_prompts')
+          .delete()
+          .eq('id', id);
+
+        if (error) {
+          console.error('Supabase delete generated prompt error:', error.message);
+          return { success: false, error: error.message };
+        }
+        return { success: true };
+      } catch (err: any) {
+        console.error('Error deleting prompt from Supabase:', err);
+        return { success: false, error: err?.message };
+      }
     }
+    return { success: true };
   }
 
   // --- Draft System Methods (PRD Section 72) ---
