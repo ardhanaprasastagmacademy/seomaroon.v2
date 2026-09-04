@@ -383,13 +383,13 @@ const DashboardOverviewInner: React.FC = () => {
         <div className="mt-4 divide-y divide-slate-100 dark:divide-slate-800">
           {generatedPrompts.length > 0 ? (
             generatedPrompts.slice(0, 5).map((gen) => (
-              <div key={gen.id} className="flex items-center justify-between py-3.5">
+              <div key={gen.id} className="flex flex-col justify-between gap-2 py-3.5 sm:flex-row sm:items-center">
                 <div className="flex items-start gap-3">
                   <div className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
                     <Sparkles className="h-3.5 w-3.5" />
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-white">
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">
                       Generated Prompt: "{gen.article_title}"
                     </p>
                     <p className="text-[11px] text-slate-500">
@@ -398,7 +398,7 @@ const DashboardOverviewInner: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-shrink-0 items-center gap-2 self-end sm:self-auto">
                   <span className="text-[10px] text-slate-400">
                     {new Date(gen.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>

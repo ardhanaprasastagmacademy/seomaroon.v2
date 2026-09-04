@@ -274,11 +274,11 @@ const BulkGeneratorViewInner: React.FC = () => {
 
             {/* Dynamic Format-True Download Actions */}
             {progress.isCompleted && (
-              <div className="flex flex-wrap items-center gap-2.5">
+              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2.5">
                 {/* 1. Download Master File in exact chosen format */}
                 <button
                   onClick={handleDownloadMasterFile}
-                  className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-700 hover:shadow-lg"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-700 hover:shadow-lg sm:w-auto"
                   title={`Download 1 file master gabungan berformat .${currentFormatInfo.extension}`}
                 >
                   <FileText className="h-4 w-4" />
@@ -288,7 +288,7 @@ const BulkGeneratorViewInner: React.FC = () => {
                 {/* 2. Download ZIP of individual files */}
                 <button
                   onClick={handleDownloadZip}
-                  className="flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:bg-emerald-700"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:bg-emerald-700 sm:w-auto"
                   title={`Unduh ZIP berisi ${generatedItems.length} file .${currentFormatInfo.extension} individual`}
                 >
                   <FolderArchive className="h-4 w-4" />
@@ -298,7 +298,7 @@ const BulkGeneratorViewInner: React.FC = () => {
                 {/* 3. Copy All */}
                 <button
                   onClick={handleCopyAll}
-                  className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                  className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 sm:w-auto"
                 >
                   {copiedAll ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
                   <span>{copiedAll ? 'Tersalin Semua!' : 'Copy All'}</span>
@@ -571,8 +571,8 @@ const BulkGeneratorViewInner: React.FC = () => {
 
       {/* Preview Modal for single item in exact chosen format */}
       {previewItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-          <div className="flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 backdrop-blur-sm sm:items-center sm:p-4">
+          <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:rounded-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 p-4 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <span className="rounded bg-blue-100 px-2 py-0.5 font-mono text-xs font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">

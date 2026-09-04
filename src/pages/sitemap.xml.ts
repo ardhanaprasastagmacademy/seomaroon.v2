@@ -6,7 +6,6 @@ export const GET: APIRoute = async ({ site }) => {
     { url: '', changefreq: 'daily', priority: 1.0 },
     { url: '/features', changefreq: 'weekly', priority: 0.9 },
     { url: '/templates', changefreq: 'weekly', priority: 0.9 },
-    { url: '/pricing', changefreq: 'weekly', priority: 0.8 },
     { url: '/dashboard', changefreq: 'daily', priority: 0.7 },
     { url: '/calendar', changefreq: 'daily', priority: 0.7 },
     { url: '/prompt-builder', changefreq: 'daily', priority: 0.7 },

@@ -19,7 +19,13 @@ import {
   MapPin,
   Layers,
   MessageSquare,
-  Volume2
+  Volume2,
+  Menu,
+  LayoutDashboard,
+  CalendarDays,
+  FileCode,
+  Boxes,
+  History
 } from 'lucide-react';
 
 export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => {
@@ -30,6 +36,7 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
   const [projectSearch, setProjectSearch] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   // New Project Form
   const [newProject, setNewProject] = useState({
@@ -164,7 +171,7 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
 
             {/* Dropdown Menu */}
             {isProjectDropdownOpen && (
-              <div className="absolute left-0 mt-2 w-80 rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in fade-in slide-in-from-top-2">
+              <div className="absolute left-0 mt-2 w-[calc(100vw-2rem)] max-w-xs rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in fade-in slide-in-from-top-2 sm:w-80">
                 <div className="flex items-center justify-between pb-2 px-1 border-b border-slate-100 dark:border-slate-800">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                     Daftar Project ({projects.length})
@@ -257,18 +264,18 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
           {/* Quick Links */}
           <a
             href="/calendar"
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-850 dark:text-slate-300"
+            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-850 dark:text-slate-300 sm:px-3"
           >
             <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
-            <span>Calendar</span>
+            <span className="hidden sm:inline">Calendar</span>
           </a>
 
           <a
             href="/prompt-builder"
-            className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-blue-700"
+            className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-2.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-blue-700 sm:px-3.5"
           >
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Buka Studio</span>
+            <span className="hidden sm:inline">Buka Studio</span>
           </a>
 
           {/* Theme Toggle */}
@@ -279,13 +286,129 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
           >
             {isDarkMode ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4" />}
           </button>
+
+          {/* Mobile Menu Hamburger (App Layout) */}
+          <button
+            onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+            aria-label="Toggle Navigation Menu"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-850 dark:text-slate-300 md:hidden"
+          >
+            {isMobileNavOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
         </div>
       </header>
 
+      {/* Mobile App Navigation Drawer */}
+      {isMobileNavOpen && (
+        <div className="border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 md:hidden animate-in slide-in-from-top-2 duration-200">
+          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1 pb-2">
+            Menu Navigasi Aplikasi
+          </div>
+          <div className="grid grid-cols-2 gap-1.5 text-xs font-semibold">
+            <a
+              href="/dashboard"
+              onClick={() => setIsMobileNavOpen(false)}
+              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
+                activePage === '/dashboard' || activePage === ''
+                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
+                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <LayoutDashboard className="h-4 w-4 text-blue-600" />
+              <span>Dashboard</span>
+            </a>
+            <a
+              href="/projects"
+              onClick={() => setIsMobileNavOpen(false)}
+              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
+                activePage === '/projects'
+                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
+                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <FolderKanban className="h-4 w-4 text-amber-500" />
+              <span>Projects</span>
+            </a>
+            <a
+              href="/calendar"
+              onClick={() => setIsMobileNavOpen(false)}
+              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
+                activePage === '/calendar'
+                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
+                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <CalendarDays className="h-4 w-4 text-emerald-600" />
+              <span>Kalender</span>
+            </a>
+            <a
+              href="/prompt-builder"
+              onClick={() => setIsMobileNavOpen(false)}
+              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
+                activePage === '/prompt-builder'
+                  ? 'bg-blue-600 text-white font-bold shadow-sm'
+                  : 'bg-blue-50/80 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
+              }`}
+            >
+              <Sparkles className="h-4 w-4 text-blue-600" />
+              <span>Prompt Studio</span>
+            </a>
+            <a
+              href="/templates-manager"
+              onClick={() => setIsMobileNavOpen(false)}
+              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
+                activePage === '/templates-manager'
+                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
+                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <Layers className="h-4 w-4 text-purple-600" />
+              <span>Templates</span>
+            </a>
+            <a
+              href="/formatter"
+              onClick={() => setIsMobileNavOpen(false)}
+              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
+                activePage === '/formatter'
+                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
+                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <FileCode className="h-4 w-4 text-indigo-600" />
+              <span>Formatter</span>
+            </a>
+            <a
+              href="/bulk"
+              onClick={() => setIsMobileNavOpen(false)}
+              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
+                activePage === '/bulk'
+                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
+                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <Boxes className="h-4 w-4 text-rose-600" />
+              <span>Bulk Studio</span>
+            </a>
+            <a
+              href="/history"
+              onClick={() => setIsMobileNavOpen(false)}
+              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
+                activePage === '/history'
+                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
+                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
+              }`}
+            >
+              <History className="h-4 w-4 text-slate-500" />
+              <span>Histori Prompt</span>
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Create Project Modal */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 sm:items-center sm:p-4">
+          <div className="w-full max-w-lg overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:rounded-2xl">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 px-6 py-4 dark:border-slate-800 dark:bg-slate-850/50">
               <div className="flex items-center gap-3">
@@ -310,7 +433,7 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
             </div>
 
             {/* Modal Body / Form */}
-            <form onSubmit={handleCreateProject} className="p-6 space-y-4 text-xs">
+            <form onSubmit={handleCreateProject} className="max-h-[70vh] overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
               <div>
                 <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Nama Project / Brand <span className="text-red-500">*</span>
@@ -412,7 +535,7 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
                 </div>
               </div>
 
-              <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="mt-6 flex flex-col-reverse items-stretch gap-2.5 border-t border-slate-100 pt-4 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-end">
                 <button
                   type="button"
                   onClick={() => setIsCreateModalOpen(false)}

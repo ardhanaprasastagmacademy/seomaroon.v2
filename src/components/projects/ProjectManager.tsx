@@ -342,8 +342,8 @@ const ProjectManagerInner: React.FC = () => {
 
       {/* Create / Edit Project Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:rounded-2xl sm:p-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 {editingProject ? 'Edit Profil Project' : 'Tambah Project Baru'}
@@ -368,7 +368,7 @@ const ProjectManagerInner: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="font-semibold text-slate-700 dark:text-slate-300">
                     Industri / Niche
@@ -396,7 +396,7 @@ const ProjectManagerInner: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="font-semibold text-slate-700 dark:text-slate-300">
                     Website URL
@@ -437,17 +437,17 @@ const ProjectManagerInner: React.FC = () => {
                 />
               </div>
 
-              <div className="mt-5 flex justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <div className="mt-5 flex flex-col-reverse sm:flex-row sm:justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-xl border border-slate-200 px-4 py-2 font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300"
+                  className="rounded-xl border border-slate-200 px-4 py-2.5 font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 sm:py-2"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2 font-bold text-white shadow-sm hover:bg-blue-700"
+                  className="flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2.5 font-bold text-white shadow-sm hover:bg-blue-700 sm:py-2"
                 >
                   <Sparkles className="h-4 w-4" />
                   <span>{editingProject ? 'Simpan Perubahan' : 'Buat Project'}</span>

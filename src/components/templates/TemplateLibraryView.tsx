@@ -261,16 +261,16 @@ const TemplateLibraryViewInner: React.FC = () => {
         })}
       </div>
 
-      {/* Template Detail Modal */}
+      {/* Modal Preview Template */}
       {selectedTemplatePreview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-          <div className="flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
-            <div className="flex items-center justify-between border-b border-slate-100 p-5 dark:border-slate-800">
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 font-mono text-xs font-bold text-blue-700">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+          <div className="flex max-h-[90vh] w-full max-w-2xl flex-col rounded-t-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:rounded-2xl">
+            <div className="flex items-center justify-between border-b border-slate-100 p-4 sm:p-5 dark:border-slate-800">
+              <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 font-mono text-xs font-bold text-blue-700">
                   #{String(selectedTemplatePreview.number).padStart(2, '0')}
                 </span>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate sm:text-base">
                   {selectedTemplatePreview.name}
                 </h3>
               </div>
@@ -282,7 +282,7 @@ const TemplateLibraryViewInner: React.FC = () => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
               <div>
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
                   Deskripsi Strategi
@@ -302,13 +302,13 @@ const TemplateLibraryViewInner: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 p-4 dark:border-slate-800">
-              <span className="text-xs text-slate-400">
-                Kategori: <strong>{selectedTemplatePreview.category}</strong>
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between border-t border-slate-100 p-4 dark:border-slate-800">
+              <span className="text-xs text-slate-500">
+                Kategori: <strong className="text-slate-700 dark:text-slate-300">{selectedTemplatePreview.category}</strong>
               </span>
               <a
                 href={`/prompt-builder?templateId=${selectedTemplatePreview.id}`}
-                className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700"
+                className="flex items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-blue-700 sm:py-2"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Gunakan di Prompt Studio</span>
@@ -320,8 +320,8 @@ const TemplateLibraryViewInner: React.FC = () => {
 
       {/* Create Custom Template Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:rounded-2xl sm:p-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 Buat Template Prompt Kustom
@@ -377,17 +377,17 @@ const TemplateLibraryViewInner: React.FC = () => {
                 />
               </div>
 
-              <div className="mt-5 flex justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <div className="mt-5 flex flex-col-reverse sm:flex-row sm:justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-xl border border-slate-200 px-4 py-2 font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300"
+                  className="rounded-xl border border-slate-200 px-4 py-2.5 font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 sm:py-2"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2 font-bold text-white shadow-sm hover:bg-blue-700"
+                  className="flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2.5 font-bold text-white shadow-sm hover:bg-blue-700 sm:py-2"
                 >
                   <Check className="h-4 w-4" />
                   <span>Simpan Template</span>
