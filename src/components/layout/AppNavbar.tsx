@@ -227,26 +227,26 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
-              className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-200 bg-slate-50 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs font-semibold text-slate-800 transition-all hover:bg-slate-100 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-750"
+              className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-200 bg-slate-50 px-2 sm:px-3 py-1.5 sm:py-2 text-xs font-semibold text-slate-800 transition-all hover:bg-slate-100 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-750"
             >
-              <FolderKanban className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600 dark:text-blue-400" />
-              <div className="flex items-center gap-1 max-w-[100px] xs:max-w-[140px] truncate sm:max-w-[200px]">
+              <FolderKanban className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+              <div className="flex items-center gap-1 max-w-[85px] xs:max-w-[120px] truncate sm:max-w-[180px]">
                 <span className="truncate">{activeProject?.name || 'Pilih Project'}</span>
               </div>
-              <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transition-transform ${isProjectDropdownOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-3 w-3 sm:h-3.5 sm:w-3.5 text-slate-400 transition-transform flex-shrink-0 ${isProjectDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Dropdown Menu */}
             {isProjectDropdownOpen && (
-              <div className="absolute left-0 mt-2 w-[calc(100vw-2rem)] max-w-xs rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in fade-in slide-in-from-top-2 sm:w-80 z-50">
-                <div className="flex items-center justify-between pb-2 px-1 border-b border-slate-100 dark:border-slate-800">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              <div className="fixed inset-x-3 top-14 z-50 mx-auto max-w-[275px] rounded-2xl border border-slate-200 bg-white p-2.5 shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in fade-in slide-in-from-top-2 sm:absolute sm:inset-auto sm:left-0 sm:top-full sm:mt-2 sm:w-72 sm:max-w-none">
+                <div className="flex items-center justify-between pb-1.5 px-1 border-b border-slate-100 dark:border-slate-800">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                     Daftar Project ({projects.length})
                   </span>
                   <a
                     href="/projects"
                     onClick={() => setIsProjectDropdownOpen(false)}
-                    className="text-[11px] font-semibold text-blue-600 hover:underline dark:text-blue-400"
+                    className="text-[10px] sm:text-[11px] font-semibold text-blue-600 hover:underline dark:text-blue-400"
                   >
                     Kelola Semua
                   </a>
@@ -254,20 +254,20 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
 
                 {/* Project Search Box */}
                 {projects.length > 2 && (
-                  <div className="relative mt-2">
-                    <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
+                  <div className="relative mt-1.5">
+                    <Search className="absolute left-2 top-2 h-3 w-3 text-slate-400" />
                     <input
                       type="text"
                       placeholder="Cari project..."
                       value={projectSearch}
                       onChange={(e) => setProjectSearch(e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-3 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                      className="w-full rounded-lg border border-slate-200 bg-slate-50 pl-7 pr-2.5 py-1 text-[11px] sm:text-xs text-slate-900 focus:border-blue-600 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                     />
                   </div>
                 )}
 
                 {/* Project Items List */}
-                <div className="mt-2 max-h-56 space-y-1 overflow-y-auto">
+                <div className="mt-1.5 max-h-44 sm:max-h-56 space-y-0.5 sm:space-y-1 overflow-y-auto pr-0.5">
                   {filteredProjects.length > 0 ? (
                     filteredProjects.map((proj) => {
                       const isActive = proj.id === activeProject?.id;
@@ -277,15 +277,15 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
                         <button
                           key={proj.id}
                           onClick={() => handleSelectProject(proj.id)}
-                          className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-xs transition-all ${
+                          className={`flex w-full items-center justify-between rounded-lg sm:rounded-xl px-2.5 py-1.5 sm:py-2 text-left text-xs transition-all ${
                             isActive
                               ? 'bg-blue-50/80 font-bold text-blue-700 shadow-sm dark:bg-blue-950/60 dark:text-blue-300'
                               : 'text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800/80'
                           }`}
                         >
-                          <div className="truncate pr-2">
-                            <p className="truncate font-semibold">{proj.name}</p>
-                            <div className="flex items-center gap-2 text-[10px] text-slate-400 font-normal mt-0.5">
+                          <div className="truncate pr-1.5">
+                            <p className="truncate text-[11px] sm:text-xs font-semibold">{proj.name}</p>
+                            <div className="flex items-center gap-1.5 text-[9px] sm:text-[10px] text-slate-400 font-normal mt-0.5">
                               <span>{proj.industry || 'General'}</span>
                               <span>&bull;</span>
                               <span className="text-blue-600 dark:text-blue-400 font-medium">
@@ -295,29 +295,29 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
                           </div>
 
                           {isActive && (
-                            <CheckCircle2 className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                            <CheckCircle2 className="h-3.5 w-3.5 text-blue-600 flex-shrink-0" />
                           )}
                         </button>
                       );
                     })
                   ) : (
-                    <div className="py-4 text-center text-xs text-slate-400">
+                    <div className="py-3 text-center text-[11px] text-slate-400">
                       Belum ada project terdaftar.
                     </div>
                   )}
                 </div>
 
                 {/* Add Project Quick Action */}
-                <div className="mt-2 border-t border-slate-100 pt-2 dark:border-slate-800">
+                <div className="mt-1.5 border-t border-slate-100 pt-1.5 dark:border-slate-800">
                   <button
                     type="button"
                     onClick={() => {
                       setIsProjectDropdownOpen(false);
                       setIsCreateModalOpen(true);
                     }}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:hover:bg-blue-900/50"
+                    className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-blue-50 px-2.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:hover:bg-blue-900/50"
                   >
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-3.5 w-3.5" />
                     <span>Tambah Project Baru</span>
                   </button>
                 </div>
@@ -418,30 +418,30 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
         >
           <div className="w-full max-w-lg overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:rounded-2xl">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 px-6 py-4 dark:border-slate-800 dark:bg-slate-850/50">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
-                  <FolderKanban className="h-5 w-5" />
+            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 px-4 py-3 sm:px-6 sm:py-4 dark:border-slate-800 dark:bg-slate-850/50">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400 flex-shrink-0">
+                  <FolderKanban className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                     Buat Project SEO Baru
                   </h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-[11px] sm:text-xs text-slate-500">
                     Kelola brand, target lokasi, dan CTA konten terpisah
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsCreateModalOpen(false)}
-                className="rounded-xl p-2 text-slate-400 hover:bg-slate-200/60 hover:text-slate-600 dark:hover:bg-slate-800"
+                className="rounded-xl p-1.5 text-slate-400 hover:bg-slate-200/60 hover:text-slate-600 dark:hover:bg-slate-800 transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Modal Body / Form */}
-            <form onSubmit={handleCreateProject} className="max-h-[70vh] overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
+            <form onSubmit={handleCreateProject} className="max-h-[75vh] overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4 text-xs">
               <div>
                 <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Nama Project / Brand <span className="text-red-500">*</span>
