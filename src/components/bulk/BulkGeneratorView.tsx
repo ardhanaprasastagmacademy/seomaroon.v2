@@ -23,7 +23,6 @@ import {
   ArrowRight,
   FileCode,
   FileSpreadsheet,
-  RefreshCw,
   Copy,
   Check,
   Eye,
@@ -39,11 +38,10 @@ const BulkGeneratorViewInner: React.FC = () => {
   const [calendar, setCalendar] = useState<ContentArticle[]>([]);
   const [templates, setTemplates] = useState<PromptTemplate[]>([]);
   const [selectedArticleIds, setSelectedArticleIds] = useState<Set<string>>(new Set());
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('tpl-04');
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('tpl-01');
   const [exportFormat, setExportFormat] = useState<ExportFormat>('md');
   const [searchArticle, setSearchArticle] = useState('');
   const [selectedClusterFilter, setSelectedClusterFilter] = useState('ALL');
-  const [isLoading, setIsLoading] = useState(false);
 
   // Generation status
   const [isGenerating, setIsGenerating] = useState(false);
@@ -85,20 +83,6 @@ const BulkGeneratorViewInner: React.FC = () => {
     }
   };
 
-  const handleRefreshCloud = async () => {
-    setIsLoading(true);
-    await Promise.all([
-      store.fetchProjectsFromSupabase(),
-      store.fetchCalendarFromSupabase(),
-      store.fetchTemplatesFromSupabase(),
-    ]);
-    const activeProj = store.getActiveProject();
-    setProject(activeProj);
-    setCalendar(store.getCalendar(activeProj?.id));
-    setTemplates(store.getTemplates());
-    setIsLoading(false);
-  };
-
   const handleToggleAll = () => {
     if (selectedArticleIds.size === filteredArticles.length && filteredArticles.length > 0) {
       setSelectedArticleIds(new Set());
@@ -132,7 +116,7 @@ const BulkGeneratorViewInner: React.FC = () => {
     const items = await executeBulkGeneration(
       selectedArticles,
       targetTemplate,
-      store.getActiveProject(),
+      store.getActiveProject() || undefined,
       exportFormat,
       (prog) => setProgress(prog)
     );
@@ -233,15 +217,6 @@ const BulkGeneratorViewInner: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleRefreshCloud}
-            disabled={isLoading}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 text-emerald-600 ${isLoading ? 'animate-spin' : ''}`} />
-            <span>{isLoading ? 'Syncing...' : 'Sync Cloud'}</span>
-          </button>
-
           <a
             href="/calendar"
             className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"

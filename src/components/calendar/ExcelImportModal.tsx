@@ -105,7 +105,8 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
     if (!activeSheet) return;
 
     const activeProject = store.getActiveProject();
-    const result = processExcelRows(activeSheet.data, columnMapping, activeProject.id);
+    const projectId = activeProject?.id || 'prj-default-01';
+    const result = processExcelRows(activeSheet.data, columnMapping, projectId);
     setValidationResult(result);
     setStep('VALIDATION');
   };
@@ -116,7 +117,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
     const activeProject = store.getActiveProject();
 
     // If user selected REPLACE mode, clear existing articles for this project first
-    if (importMode === 'REPLACE') {
+    if (importMode === 'REPLACE' && activeProject?.id) {
       store.clearCalendar(activeProject.id);
     }
 
@@ -137,16 +138,16 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
   const previewRows = currentSheet?.data.slice(0, 4) || [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-3 sm:p-4 backdrop-blur-sm">
       <div className="flex max-h-[90vh] w-full max-w-3xl flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 p-5 dark:border-slate-800">
+        <div className="flex items-center justify-between border-b border-slate-100 p-4 sm:p-5 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
               <FileSpreadsheet className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900 dark:text-white">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                 Import Content Calendar (.xlsx / .xls / .csv)
               </h2>
               <p className="text-xs text-slate-500">
@@ -164,10 +165,10 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {/* STEP 1: UPLOAD */}
           {step === 'UPLOAD' && (
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div
                 onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                 onDragLeave={() => setIsDragging(false)}
@@ -177,7 +178,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
                   if (e.dataTransfer.files[0]) handleFileChange(e.dataTransfer.files[0]);
                 }}
                 onClick={() => fileInputRef.current?.click()}
-                className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-10 text-center transition-all ${
+                className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 sm:p-10 text-center transition-all ${
                   isDragging
                     ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/30'
                     : 'border-slate-300 hover:border-blue-400 dark:border-slate-700 dark:hover:border-blue-600'
@@ -192,10 +193,10 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
                     if (e.target.files?.[0]) handleFileChange(e.target.files[0]);
                   }}
                 />
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
-                  <Upload className="h-8 w-8" />
+                <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
+                  <Upload className="h-7 w-7 sm:h-8 sm:w-8" />
                 </div>
-                <h3 className="mt-4 text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="mt-4 text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                   Tarik file Excel (.xlsx / .csv) Anda ke sini
                 </h3>
                 <p className="mt-1 text-xs text-slate-500">
@@ -209,9 +210,9 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
               </div>
 
               {/* Sample Excel Download Box */}
-              <div className="flex items-center justify-between rounded-xl border border-blue-100 bg-blue-50/60 p-4 dark:border-blue-900/40 dark:bg-blue-950/30">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-blue-100 bg-blue-50/60 p-3.5 sm:p-4 dark:border-blue-900/40 dark:bg-blue-950/30">
                 <div className="flex items-center gap-3">
-                  <FileSpreadsheet className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <FileSpreadsheet className="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400" />
                   <div>
                     <p className="text-xs font-bold text-blue-900 dark:text-blue-200">
                       Butuh contoh format kalender Excel?
@@ -225,7 +226,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
                 <button
                   type="button"
                   onClick={handleDownloadSample}
-                  className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-700"
+                  className="flex items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700 shrink-0"
                 >
                   <Download className="h-3.5 w-3.5" />
                   <span>Download Sample</span>
@@ -528,12 +529,12 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between border-t border-slate-100 p-5 dark:border-slate-800">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 p-4 sm:p-5 dark:border-slate-800">
           {step !== 'UPLOAD' ? (
             <button
               type="button"
               onClick={() => setStep(step === 'VALIDATION' ? 'SHEET_AND_MAPPING' : 'UPLOAD')}
-              className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="rounded-lg border border-slate-200 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               Kembali
             </button>
@@ -541,7 +542,7 @@ export const ExcelImportModal: React.FC<ExcelImportModalProps> = ({
             <div />
           )}
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={onClose}

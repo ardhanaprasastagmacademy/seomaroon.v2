@@ -19,6 +19,15 @@ export interface DerivedFieldsResult {
   entity_nodes?: string;
   item_a_name?: string;
   item_b_name?: string;
+  cluster_topics?: string;
+  recommended_list?: string;
+  prerequisites?: string;
+  step_outline?: string;
+  common_mistakes?: string;
+  existing_content_summary?: string;
+  detected_serp_intent?: string;
+  competitor_angles?: string;
+  pricing_packages?: string;
 }
 
 /**
@@ -199,6 +208,7 @@ export function generateDerivedFields(
 ): DerivedFieldsResult {
   const keyword = article.primary_keyword || '';
   const title = article.title || '';
+  const cluster = article.content_cluster || 'Produk & Layanan';
   const journey = article.journey_stage;
 
   const search_intent = deriveSearchIntent(keyword, title, journey);
@@ -228,15 +238,24 @@ export function generateDerivedFields(
     outline_structure,
     schema_markup,
     internal_links,
-    content_gaps: `- Kurangnya data spesifikasi teknis dan perbandingan harga di pasaran.\n- Belum ada studi kasus implementasi nyata di kantor/perusahaan.\n- Belum ada penjelasan garansi dan after-sales support.`,
-    comparison_factors: `1. Ergonomi & Kenyamanan\n2. Kualitas Bahan & Material\n3. Fitur Penyesuaian (Adjustability)\n4. Garansi Resmi & Durabilitas\n5. Harga & Nilai Investasi`,
-    service_areas: `${project?.primary_location || 'Jabodetabek'} dan sekitarnya (Jakarta Pusat, Jakarta Selatan, Tangerang, Bekasi, Depok, Bogor)`,
-    local_benefits: `Pengiriman cepat di hari yang sama, tim instalasi gratis ke lokasi, dan garansi tukar unit setempat.`,
-    buying_criteria: `Material rangka kuat, sertifikasi ergonomi BIFMA/ISO, kemudahan servis, dan reputasi distributor resmi.`,
-    budget_options: `Paket Hemat (Entry Level), Paket Best Seller (Mid Tier), dan Paket Executive (High-End).`,
+    cluster_topics: `Sub-topik Spoke 1: Rekomendasi ${cluster} Terbaik\nSub-topik Spoke 2: Panduan Perawatan & Maintenance ${cluster}\nSub-topik Spoke 3: Komparasi Harga & Analisis Spesifikasi\nSub-topik Spoke 4: Supplier Pengadaan B2B Terpercaya`,
+    content_gaps: `- Kurangnya data spesifikasi teknis dan perbandingan harga di pasaran.\n- Belum ada studi kasus implementasi nyata di kantor/perusahaan.\n- Belum ada penjelasan garansi dan after-sales support resmi.`,
+    comparison_factors: `1. Ergonomi & Kenyamanan\n2. Kualitas Bahan & Material\n3. Fitur Penyesuaian (Adjustability)\n4. Garansi Resmi & Durabilitas\n5. Harga & Nilai Investasi (Value for Money)`,
+    service_areas: `${project?.primary_location || 'Jabodetabek'} dan sekitarnya (Jakarta Pusat, Jakarta Selatan, Jakarta Barat, Tangerang, Bekasi, Depok, Bogor)`,
+    local_benefits: `Pengiriman cepat di hari yang sama, tim teknisi instalasi gratis ke lokasi, dan garansi tukar unit setempat.`,
+    buying_criteria: `Material rangka kuat, sertifikasi ergonomi BIFMA/ISO, kemudahan servis, dan reputasi distributor resmi bergaransi.`,
+    recommended_list: `1. Opsi Flagship: Seri Executive Ergonomic Pro (Garansi 5 Tahun)\n2. Opsi Best Seller: Seri Dynamic Comfort Workstation (Paling Populer)\n3. Opsi Budget-Friendly: Seri Essential Compact Smart (Nilai Ekonomis Terbaik)`,
+    budget_options: `Paket Hemat (Rp 1.000.000 - Rp 2.500.000), Paket Best Seller (Rp 2.500.000 - Rp 5.000.000), dan Paket Executive (> Rp 5.000.000).`,
     value_propositions: `Garansi resmi hingga 5 tahun, gratis konsultasi tata ruang, dan diskon volume khusus pengadaan B2B.`,
     objections_handling: `Menjawab keraguan mengenai biaya kirim, proses retur jika barang tidak pas, dan opsi termin pembayaran perusahaan (TOP 30 hari).`,
-    entity_nodes: `${keyword} -> Entitas Terkait: Ergonomi Kerja, Standar K3, Produktivitas Kantor, Furniture B2B`,
+    entity_nodes: `${keyword} -> Entitas Terkait: Ergonomi Kerja, Standar K3, Produktivitas Kantor, Furniture B2B, Ketahanan Beban`,
+    prerequisites: `Pita ukur ruangan, spesifikasi daya atau beban kerja, daftar kebutuhan pengguna, dan anggaran pengadaan yang dialokasikan.`,
+    step_outline: `### Langkah 1: Audit & Pengukuran Kebutuhan Ruangan\n### Langkah 2: Menentukan Spesifikasi & Sertifikasi Wajib\n### Langkah 3: Melakukan Pengujian Ergonomi atau Mock-Up Sample\n### Langkah 4: Membandingkan Penawaran Harga & Garansi Distributor\n### Langkah 5: Eksekusi Pemesanan & Penjadwalan Instalasi`,
+    common_mistakes: `1. Memilih produk hanya berdasarkan harga termurah tanpa melihat sertifikasi daya tahan.\n2. Mengabaikan dimensi ruangan sehingga menyulitkan alur gerak.\n3. Tidak memastikan ketersediaan spare-part dan garansi purnajual.`,
+    existing_content_summary: `Artikel lama terlalu teoritis, tidak menyertakan tabel spesifikasi konkret, data harga sudah tidak akurat (versi 2-3 tahun lalu), dan belum ramah terhadap AI Answer Engines.`,
+    detected_serp_intent: `SERP saat ini beralih ke Commercial Investigation & Actionable Listicle dengan tabel perbandingan cepat di bagian awal.`,
+    competitor_angles: `Pesaing teratas menampilkan ulasan video, tabel komparasi interaktif, dan estimasi waktu pengiriman instan.`,
+    pricing_packages: `1. Paket Startup (Min. 5 Unit): Diskon 10% + Free Ongkir Jabodetabek\n2. Paket Corporate (Min. 20 Unit): Diskon 20% + Free Pemasangan + Garansi 5 Tahun\n3. Paket Enterprise Custom: Custom Spesifikasi + Syarat Pembayaran TOP 30 Hari`,
     item_a_name,
     item_b_name,
   };

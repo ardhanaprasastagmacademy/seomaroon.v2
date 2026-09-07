@@ -22,13 +22,14 @@ import {
   CheckCircle2,
   Plus,
   Edit2,
-  RefreshCw,
   LayoutGrid,
   List,
   ArrowUpDown,
   Filter,
   Check,
-  Zap
+  Zap,
+  ChevronDown,
+  RotateCcw
 } from 'lucide-react';
 
 const ContentCalendarInner: React.FC = () => {
@@ -44,7 +45,6 @@ const ContentCalendarInner: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState('ALL');
   const [sortBy, setSortBy] = useState<'DAY_ASC' | 'DAY_DESC' | 'TITLE_AZ' | 'DATE_NEWEST'>('DAY_ASC');
   const [viewMode, setViewMode] = useState<'TABLE' | 'GRID'>('TABLE');
-  const [isLoading, setIsLoading] = useState(false);
 
   const resetFilters = () => {
     setSearchQuery('');
@@ -53,6 +53,13 @@ const ContentCalendarInner: React.FC = () => {
     setSelectedStatus('ALL');
     setSelectedDay('ALL');
   };
+
+  const isFiltered =
+    searchQuery !== '' ||
+    selectedCluster !== 'ALL' ||
+    selectedJourney !== 'ALL' ||
+    selectedStatus !== 'ALL' ||
+    selectedDay !== 'ALL';
 
   // Multi-selection for bulk generation
   const [selectedArticleIds, setSelectedArticleIds] = useState<Set<string>>(new Set());
@@ -99,16 +106,8 @@ const ContentCalendarInner: React.FC = () => {
     setCalendar(Array.isArray(items) ? items : []);
   };
 
-  const handleRefreshCloud = async () => {
-    setIsLoading(true);
-    await store.fetchCalendarFromSupabase();
-    setIsLoading(false);
-    setSuccessBanner('Sinkronisasi data langsung dari cloud Supabase berhasil.');
-    setTimeout(() => setSuccessBanner(null), 4000);
-  };
-
   const handleImportSuccess = (count: number) => {
-    loadCalendar(false);
+    syncCalendarFromMemory();
     setSuccessBanner(`Berhasil mengimpor ${count} artikel ke dalam Content Calendar dan Supabase.`);
     setTimeout(() => setSuccessBanner(null), 6000);
   };
@@ -242,36 +241,25 @@ const ContentCalendarInner: React.FC = () => {
       {/* Top Header & Actions Bar */}
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-white">
               Dynamic Content Calendar
             </h1>
             <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-bold text-blue-700 dark:bg-blue-900/60 dark:text-blue-300">
               {calendar.length} Items Live
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="mt-1 text-xs text-slate-500">
             Project: <span className="font-semibold text-slate-700 dark:text-slate-300">{project?.name || 'Project Aktif'}</span> &bull; 
-            Tersinkronisasi real-time dengan database Supabase Cloud.
+            Tersinkronisasi real-time dengan Supabase Cloud.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Cloud Sync Refresh */}
-          <button
-            onClick={handleRefreshCloud}
-            disabled={isLoading}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
-            title="Sinkronkan ulang dari Supabase"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 text-emerald-600 ${isLoading ? 'animate-spin' : ''}`} />
-            <span className="hidden sm:inline">Sync Cloud</span>
-          </button>
-
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
           {/* Add Article Button */}
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-black dark:bg-slate-800 dark:hover:bg-slate-700"
+            className="col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2.5 sm:py-2 text-xs font-bold text-white shadow-sm hover:bg-black active:scale-95 dark:bg-slate-800 dark:hover:bg-slate-700"
           >
             <Plus className="h-4 w-4 text-emerald-400" />
             <span>Tambah Artikel</span>
@@ -280,7 +268,7 @@ const ContentCalendarInner: React.FC = () => {
           {/* Import Excel Button */}
           <button
             onClick={() => setIsImportModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-800 shadow-sm transition-all hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 sm:py-2 text-xs font-bold text-slate-800 shadow-sm transition-all hover:bg-slate-50 active:scale-95 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
           >
             <Upload className="h-4 w-4 text-blue-600 dark:text-blue-400" />
             <span>Import Excel</span>
@@ -289,7 +277,7 @@ const ContentCalendarInner: React.FC = () => {
           {/* Bulk Generator */}
           <a
             href="/bulk"
-            className="flex items-center gap-1.5 rounded-xl border border-indigo-200 bg-indigo-50 px-3.5 py-2 text-xs font-bold text-indigo-700 shadow-sm transition-all hover:bg-indigo-100 dark:border-indigo-900/50 dark:bg-indigo-950/40 dark:text-indigo-300"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-indigo-200 bg-indigo-50 px-3.5 py-2.5 sm:py-2 text-xs font-bold text-indigo-700 shadow-sm transition-all hover:bg-indigo-100 active:scale-95 dark:border-indigo-900/50 dark:bg-indigo-950/40 dark:text-indigo-300"
           >
             <Boxes className="h-4 w-4" />
             <span>Bulk Studio</span>
@@ -402,74 +390,139 @@ const ContentCalendarInner: React.FC = () => {
       )}
 
       {/* Filters & Control Toolbar */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          {/* Search Box */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Cari judul artikel, keyword utama, atau LSI..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/70 pl-10 pr-4 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:bg-white focus:outline-none dark:border-slate-800 dark:bg-slate-800 dark:text-white"
-            />
-          </div>
+      <div className="rounded-2xl border border-slate-200 bg-white p-3.5 sm:p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900 space-y-3">
+        {/* Row 1: Search Box */}
+        <div className="relative w-full">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Cari judul artikel, keyword utama, atau LSI..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 bg-slate-50/70 pl-10 pr-9 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 dark:border-slate-800 dark:bg-slate-800 dark:text-white dark:focus:bg-slate-850 transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              title="Hapus pencarian"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
 
-          {/* Filter Dropdowns & View Mode */}
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Day Filter */}
+        {/* Row 2: Responsive Dropdown Grid (2x2 on Mobile, 4 columns on Tablet/Desktop) */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-2.5">
+          {/* Day Filter Dropdown */}
+          <div className="relative w-full">
             <select
               value={selectedDay}
               onChange={(e) => setSelectedDay(e.target.value)}
-              className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2 text-xs font-semibold text-slate-700 focus:border-blue-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300"
+              className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 pr-7 text-xs font-semibold text-slate-700 transition-all focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:focus:bg-slate-850 truncate"
+              title="Filter Hari"
             >
               <option value="ALL">Semua Hari ({calendar.length})</option>
-              {allDays.map(day => (
+              {allDays.map((day) => (
                 <option key={day} value={day}>{day}</option>
               ))}
             </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+          </div>
 
-            {/* Cluster Filter */}
+          {/* Cluster Filter Dropdown */}
+          <div className="relative w-full">
             <select
               value={selectedCluster}
               onChange={(e) => setSelectedCluster(e.target.value)}
-              className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2 text-xs font-semibold text-slate-700 focus:border-blue-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300"
+              className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 pr-7 text-xs font-semibold text-slate-700 transition-all focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:focus:bg-slate-850 truncate"
+              title="Filter Content Cluster"
             >
-              <option value="ALL">Semua Cluster</option>
-              {allClusters.map(c => (
+              <option value="ALL">Semua Cluster ({allClusters.length})</option>
+              {allClusters.map((c) => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+          </div>
 
-            {/* Journey Stage */}
+          {/* Journey Stage Dropdown */}
+          <div className="relative w-full">
             <select
               value={selectedJourney}
               onChange={(e) => setSelectedJourney(e.target.value)}
-              className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2 text-xs font-semibold text-slate-700 focus:border-blue-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300"
+              className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 pr-7 text-xs font-semibold text-slate-700 transition-all focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:focus:bg-slate-850 truncate"
+              title="Filter Funnel Stage"
             >
               <option value="ALL">Semua Funnel</option>
-              <option value="TOFU">TOFU</option>
-              <option value="MOFU">MOFU</option>
-              <option value="BOFU">BOFU</option>
+              <option value="TOFU">TOFU (Awareness)</option>
+              <option value="MOFU">MOFU (Consideration)</option>
+              <option value="BOFU">BOFU (Decision)</option>
             </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+          </div>
 
-            {/* Sort Selector */}
-            <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 dark:border-slate-800 dark:bg-slate-800">
-              <ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-none dark:text-slate-300"
+          {/* Sort Selector Dropdown */}
+          <div className="relative w-full">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 pr-7 text-xs font-semibold text-slate-700 transition-all focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:focus:bg-slate-850 truncate"
+              title="Urutkan Data"
+            >
+              <option value="DAY_ASC">Urutkan: Hari (01 &rarr; 30)</option>
+              <option value="DAY_DESC">Urutkan: Hari (30 &rarr; 01)</option>
+              <option value="TITLE_AZ">Urutkan: Judul (A &rarr; Z)</option>
+              <option value="DATE_NEWEST">Urutkan: Terbaru</option>
+            </select>
+            <ArrowUpDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+          </div>
+        </div>
+
+        {/* Row 3: Status Quick Filter Pills + Active Filter Reset + View Mode Toggle */}
+        <div className="flex flex-col gap-2.5 pt-3 border-t border-slate-100 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+          {/* Status Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            <span className="text-[11px] font-semibold text-slate-400 whitespace-nowrap hidden sm:inline mr-1">
+              Status:
+            </span>
+            {(['ALL', 'Published', 'Ready', 'Generated', 'Draft'] as const).map((st) => {
+              const isActive = selectedStatus === st;
+              return (
+                <button
+                  key={st}
+                  type="button"
+                  onClick={() => setSelectedStatus(st)}
+                  className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap transition-all ${
+                    isActive
+                      ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                  }`}
+                >
+                  {st === 'ALL' ? 'Semua' : st}
+                </button>
+              );
+            })}
+
+            {isFiltered && (
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="flex items-center gap-1 rounded-lg bg-red-50 px-2 py-1 text-[11px] font-semibold text-red-600 hover:bg-red-100 dark:bg-red-950/50 dark:text-red-300 whitespace-nowrap transition-all"
+                title="Reset semua filter"
               >
-                <option value="DAY_ASC">Urutkan: Hari (01 &rarr; 30)</option>
-                <option value="DAY_DESC">Urutkan: Hari (30 &rarr; 01)</option>
-                <option value="TITLE_AZ">Urutkan: Judul (A &rarr; Z)</option>
-                <option value="DATE_NEWEST">Urutkan: Terbaru</option>
-              </select>
-            </div>
+                <RotateCcw className="h-3 w-3" />
+                <span>Reset</span>
+              </button>
+            )}
+          </div>
 
-            {/* View Mode Toggle */}
+          {/* Right Controls: Article Count & View Mode Toggle */}
+          <div className="flex items-center justify-between sm:justify-end gap-3">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+              <span className="font-bold text-slate-800 dark:text-slate-200">{filteredArticles.length}</span> dari {calendar.length} artikel
+            </span>
+
             <div className="flex items-center rounded-lg border border-slate-200 bg-slate-100 p-0.5 dark:border-slate-800 dark:bg-slate-800">
               <button
                 type="button"
@@ -500,219 +553,421 @@ const ContentCalendarInner: React.FC = () => {
         </div>
       </div>
 
-      {/* VIEW 1: DYNAMIC TABLE VIEW */}
+      {/* VIEW 1: DYNAMIC TABLE / CARD VIEW */}
       {viewMode === 'TABLE' && (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft dark:border-slate-800 dark:bg-slate-900">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider dark:border-slate-800 dark:bg-slate-850">
-                <tr>
-                  <th className="w-10 px-4 py-3 text-center">
-                    <button onClick={handleToggleSelectAll} className="text-slate-400 hover:text-slate-600">
-                      {selectedArticleIds.size === filteredArticles.length && filteredArticles.length > 0 ? (
-                        <CheckSquare className="h-4 w-4 text-blue-600" />
-                      ) : (
-                        <Square className="h-4 w-4" />
-                      )}
-                    </button>
-                  </th>
-                  <th className="px-3 py-3">Hari / Waktu</th>
-                  <th className="px-4 py-3 min-w-[280px]">Judul Artikel</th>
-                  <th className="px-3 py-3">Target Keyword</th>
-                  <th className="px-3 py-3">Cluster</th>
-                  <th className="px-3 py-3">Funnel</th>
-                  <th className="px-3 py-3">Status (Klik Ubah)</th>
-                  <th className="px-4 py-3 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
-                {filteredArticles.length > 0 ? (
-                  filteredArticles.map((art) => {
-                    const isSelected = selectedArticleIds.has(art.id);
-                    const title = String(art.title || 'Artikel Tanpa Judul');
-                    const primaryKw = String(art.primary_keyword || '-');
-                    const cluster = String(art.content_cluster || 'Umum');
-                    const day = String(art.day || 'Hari 01');
-                    const time = String(art.time_slot || '');
-                    const journey = String(art.journey_stage || 'TOFU');
-                    const status = String(art.status || 'Draft');
+        <div className="space-y-4">
+          {/* MOBILE VIEW (CARD LIST) - visible on < md screens */}
+          <div className="block md:hidden space-y-3">
+            {/* Quick Bulk Select Bar on Mobile */}
+            {filteredArticles.length > 0 && (
+              <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <button
+                  type="button"
+                  onClick={handleToggleSelectAll}
+                  className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300"
+                >
+                  {selectedArticleIds.size === filteredArticles.length && filteredArticles.length > 0 ? (
+                    <CheckSquare className="h-4 w-4 text-blue-600" />
+                  ) : (
+                    <Square className="h-4 w-4 text-slate-400" />
+                  )}
+                  <span>Pilih Semua ({filteredArticles.length})</span>
+                </button>
+                {selectedArticleIds.size > 0 && (
+                  <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400">
+                    {selectedArticleIds.size} terpilih
+                  </span>
+                )}
+              </div>
+            )}
 
-                    return (
-                      <tr
-                        key={art.id}
-                        onClick={() => setSelectedArticleDetail(art)}
-                        className={`cursor-pointer transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/50 ${
-                          isSelected ? 'bg-blue-50/40 dark:bg-blue-950/20' : ''
+            {filteredArticles.length > 0 ? (
+              filteredArticles.map((art) => {
+                const isSelected = selectedArticleIds.has(art.id);
+                const title = String(art.title || 'Artikel Tanpa Judul');
+                const primaryKw = String(art.primary_keyword || '-');
+                const cluster = String(art.content_cluster || 'Umum');
+                const day = String(art.day || 'Hari 01');
+                const time = String(art.time_slot || '');
+                const journey = String(art.journey_stage || 'TOFU');
+                const status = String(art.status || 'Draft');
+
+                return (
+                  <div
+                    key={art.id}
+                    onClick={() => setSelectedArticleDetail(art)}
+                    className={`rounded-2xl border transition-all cursor-pointer p-4 bg-white shadow-sm dark:bg-slate-900 ${
+                      isSelected
+                        ? 'border-blue-500 bg-blue-50/30 dark:bg-blue-950/20'
+                        : 'border-slate-200 hover:border-slate-300 dark:border-slate-800'
+                    }`}
+                  >
+                    {/* Card Top Row: Checkbox + Day/Time Badge + Status Select */}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSelectOne(art.id)}
+                          className="text-slate-400 hover:text-slate-600 p-0.5"
+                        >
+                          {isSelected ? (
+                            <CheckSquare className="h-4 w-4 text-blue-600" />
+                          ) : (
+                            <Square className="h-4 w-4" />
+                          )}
+                        </button>
+                        <span className="rounded-lg bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                          {day} {time ? `• ${time}` : ''}
+                        </span>
+                      </div>
+
+                      {/* Interactive Status Selector */}
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <select
+                          value={status}
+                          onChange={(e) => handleQuickStatusChange(art.id, e.target.value as any, e as any)}
+                          className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                            status === 'Published'
+                              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
+                              : status === 'Ready'
+                              ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
+                              : status === 'Generated'
+                              ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300'
+                              : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                          }`}
+                        >
+                          <option value="Published">Published</option>
+                          <option value="Ready">Ready</option>
+                          <option value="Generated">Generated</option>
+                          <option value="Draft">Draft</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Card Body: Title */}
+                    <h3 className="mt-2.5 text-xs sm:text-sm font-bold text-slate-900 line-clamp-2 dark:text-white">
+                      {title}
+                    </h3>
+
+                    {/* Card Keyword & Badges */}
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                      <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300 truncate max-w-[200px]">
+                        🎯 {primaryKw}
+                      </span>
+                      <span className="rounded-md bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                        {cluster}
+                      </span>
+                      <span
+                        className={`rounded px-1.5 py-0.5 text-[9px] font-extrabold ${
+                          journey === 'TOFU'
+                            ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                            : journey === 'MOFU'
+                            ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                            : 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'
                         }`}
                       >
-                        {/* Checkbox */}
-                        <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={() => handleToggleSelectOne(art.id)}
-                            className="text-slate-400 hover:text-slate-600"
-                          >
-                            {isSelected ? (
-                              <CheckSquare className="h-4 w-4 text-blue-600" />
-                            ) : (
-                              <Square className="h-4 w-4" />
-                            )}
-                          </button>
-                        </td>
+                        {journey}
+                      </span>
+                    </div>
 
-                        {/* Day & Time */}
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          <div className="font-bold text-slate-800 dark:text-slate-200">{day}</div>
-                          {time && <div className="text-[10px] text-slate-400">{time}</div>}
-                        </td>
+                    {/* Card Footer: Action Buttons */}
+                    <div
+                      className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2.5 dark:border-slate-800"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <a
+                        href={`/prompt-builder?articleId=${art.id}`}
+                        className="flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-600 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-400"
+                      >
+                        <Sparkles className="h-3 w-3" />
+                        <span>Prompt</span>
+                      </a>
 
-                        {/* Title */}
-                        <td className="px-4 py-3">
-                          <div className="font-bold text-slate-900 line-clamp-1 dark:text-white">
-                            {title}
-                          </div>
-                          {art.slug && (
-                            <div className="text-[10px] text-slate-400 truncate max-w-xs font-mono">
-                              {art.slug}
-                            </div>
-                          )}
-                        </td>
-
-                        {/* Primary Keyword */}
-                        <td className="px-3 py-3 font-medium text-slate-700 dark:text-slate-300">
-                          <span className="rounded bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-800 dark:bg-slate-800 dark:text-slate-200">
-                            {primaryKw}
-                          </span>
-                        </td>
-
-                        {/* Cluster */}
-                        <td className="px-3 py-3">
-                          <span className="rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                            {cluster}
-                          </span>
-                        </td>
-
-                        {/* Funnel */}
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          <span
-                            className={`rounded px-2 py-0.5 text-[10px] font-extrabold ${
-                              journey === 'TOFU'
-                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                                : journey === 'MOFU'
-                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                                : 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'
-                            }`}
-                          >
-                            {journey}
-                          </span>
-                        </td>
-
-                        {/* Live Quick Status Selector */}
-                        <td className="px-3 py-3 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                          <select
-                            value={status}
-                            onChange={(e) => handleQuickStatusChange(art.id, e.target.value as any, e as any)}
-                            className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                              status === 'Published'
-                                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-                                : status === 'Ready'
-                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
-                                : status === 'Generated'
-                                ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300'
-                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
-                            }`}
-                          >
-                            <option value="Published">Published</option>
-                            <option value="Ready">Ready</option>
-                            <option value="Generated">Generated</option>
-                            <option value="Draft">Draft</option>
-                          </select>
-                        </td>
-
-                        {/* Actions */}
-                        <td className="px-4 py-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-1.5">
-                            <a
-                              href={`/prompt-builder?articleId=${art.id}`}
-                              className="flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-600 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-400"
-                            >
-                              <Sparkles className="h-3 w-3" />
-                              <span>Prompt</span>
-                            </a>
-
-                            <button
-                              onClick={() => setEditingArticle(art)}
-                              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800"
-                              title="Edit artikel"
-                            >
-                              <Edit2 className="h-3.5 w-3.5" />
-                            </button>
-
-                            <button
-                              onClick={(e) => handleDeleteArticle(art.id, e)}
-                              className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/50"
-                              title="Hapus artikel"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan={8} className="py-16 text-center">
-                      <div className="mx-auto flex max-w-md flex-col items-center justify-center">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
-                          <FileSpreadsheet className="h-8 w-8" />
-                        </div>
-                        {calendar.length === 0 ? (
-                          <>
-                            <h3 className="mt-4 text-base font-bold text-slate-900 dark:text-white">
-                              Project Baru: Belum Ada Artikel (Mulai dari 0)
-                            </h3>
-                            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                              Project <span className="font-semibold text-slate-700 dark:text-slate-300">{project?.name || 'ini'}</span> masih bersih tanpa artikel. Anda dapat menambahkan artikel secara bertahap atau mengimpor file Excel Content Calendar Anda.
-                            </p>
-                            <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
-                              <button
-                                onClick={() => setIsAddModalOpen(true)}
-                                className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition-all"
-                              >
-                                <Plus className="h-4 w-4" />
-                                <span>Tambah Artikel Pertama</span>
-                              </button>
-                              <button
-                                onClick={() => setIsImportModalOpen(true)}
-                                className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                              >
-                                <Upload className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                                <span>Import File Excel</span>
-                              </button>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <h3 className="mt-3 text-sm font-bold text-slate-800 dark:text-slate-200">
-                              Tidak Ada Artikel yang Sesuai Filter
-                            </h3>
-                            <p className="mt-1 text-xs text-slate-500">
-                              Coba ubah kata kunci pencarian atau reset filter di atas.
-                            </p>
-                            <button
-                              onClick={resetFilters}
-                              className="mt-3 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-600 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-400"
-                            >
-                              Reset Filter
-                            </button>
-                          </>
-                        )}
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => setEditingArticle(art)}
+                          className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800"
+                          title="Edit artikel"
+                        >
+                          <Edit2 className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => handleDeleteArticle(art.id, e)}
+                          className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/50"
+                          title="Hapus artikel"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                       </div>
-                    </td>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-soft dark:border-slate-800 dark:bg-slate-900">
+                <div className="mx-auto flex w-full max-w-sm flex-col items-center justify-center px-2">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
+                    <FileSpreadsheet className="h-7 w-7" />
+                  </div>
+                  {calendar.length === 0 ? (
+                    <>
+                      <h3 className="mt-3 text-sm font-bold text-slate-900 dark:text-white">
+                        Project Baru: Belum Ada Artikel
+                      </h3>
+                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                        Project <span className="font-semibold text-slate-700 dark:text-slate-300">{project?.name || 'ini'}</span> masih bersih. Tambahkan artikel atau import file Excel.
+                      </p>
+                      <div className="mt-4 flex flex-col w-full gap-2">
+                        <button
+                          onClick={() => setIsAddModalOpen(true)}
+                          className="flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700"
+                        >
+                          <Plus className="h-4 w-4" />
+                          <span>Tambah Artikel Pertama</span>
+                        </button>
+                        <button
+                          onClick={() => setIsImportModalOpen(true)}
+                          className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200"
+                        >
+                          <Upload className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          <span>Import File Excel</span>
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="mt-3 text-sm font-bold text-slate-800 dark:text-slate-200">
+                        Tidak Ada Artikel yang Sesuai Filter
+                      </h3>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Coba ubah kata kunci atau reset filter Anda.
+                      </p>
+                      <button
+                        onClick={resetFilters}
+                        className="mt-3 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-600 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-400"
+                      >
+                        Reset Filter
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* DESKTOP VIEW (TABLE) - visible on >= md screens */}
+          <div className="hidden md:block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft dark:border-slate-800 dark:bg-slate-900">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider dark:border-slate-800 dark:bg-slate-850">
+                  <tr>
+                    <th className="w-10 px-4 py-3 text-center">
+                      <button onClick={handleToggleSelectAll} className="text-slate-400 hover:text-slate-600">
+                        {selectedArticleIds.size === filteredArticles.length && filteredArticles.length > 0 ? (
+                          <CheckSquare className="h-4 w-4 text-blue-600" />
+                        ) : (
+                          <Square className="h-4 w-4" />
+                        )}
+                      </button>
+                    </th>
+                    <th className="px-3 py-3">Hari / Waktu</th>
+                    <th className="px-4 py-3 min-w-[280px]">Judul Artikel</th>
+                    <th className="px-3 py-3">Target Keyword</th>
+                    <th className="px-3 py-3">Cluster</th>
+                    <th className="px-3 py-3">Funnel</th>
+                    <th className="px-3 py-3">Status (Klik Ubah)</th>
+                    <th className="px-4 py-3 text-right">Aksi</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
+                  {filteredArticles.length > 0 ? (
+                    filteredArticles.map((art) => {
+                      const isSelected = selectedArticleIds.has(art.id);
+                      const title = String(art.title || 'Artikel Tanpa Judul');
+                      const primaryKw = String(art.primary_keyword || '-');
+                      const cluster = String(art.content_cluster || 'Umum');
+                      const day = String(art.day || 'Hari 01');
+                      const time = String(art.time_slot || '');
+                      const journey = String(art.journey_stage || 'TOFU');
+                      const status = String(art.status || 'Draft');
+
+                      return (
+                        <tr
+                          key={art.id}
+                          onClick={() => setSelectedArticleDetail(art)}
+                          className={`cursor-pointer transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/50 ${
+                            isSelected ? 'bg-blue-50/40 dark:bg-blue-950/20' : ''
+                          }`}
+                        >
+                          {/* Checkbox */}
+                          <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              onClick={() => handleToggleSelectOne(art.id)}
+                              className="text-slate-400 hover:text-slate-600"
+                            >
+                              {isSelected ? (
+                                <CheckSquare className="h-4 w-4 text-blue-600" />
+                              ) : (
+                                <Square className="h-4 w-4" />
+                              )}
+                            </button>
+                          </td>
+
+                          {/* Day & Time */}
+                          <td className="px-3 py-3 whitespace-nowrap">
+                            <div className="font-bold text-slate-800 dark:text-slate-200">{day}</div>
+                            {time && <div className="text-[10px] text-slate-400">{time}</div>}
+                          </td>
+
+                          {/* Title */}
+                          <td className="px-4 py-3">
+                            <div className="font-bold text-slate-900 line-clamp-1 dark:text-white">
+                              {title}
+                            </div>
+                            {art.slug && (
+                              <div className="text-[10px] text-slate-400 truncate max-w-xs font-mono">
+                                {art.slug}
+                              </div>
+                            )}
+                          </td>
+
+                          {/* Primary Keyword */}
+                          <td className="px-3 py-3 font-medium text-slate-700 dark:text-slate-300">
+                            <span className="rounded bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-800 dark:bg-slate-800 dark:text-slate-200">
+                              {primaryKw}
+                            </span>
+                          </td>
+
+                          {/* Cluster */}
+                          <td className="px-3 py-3">
+                            <span className="rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                              {cluster}
+                            </span>
+                          </td>
+
+                          {/* Funnel */}
+                          <td className="px-3 py-3 whitespace-nowrap">
+                            <span
+                              className={`rounded px-2 py-0.5 text-[10px] font-extrabold ${
+                                journey === 'TOFU'
+                                  ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                                  : journey === 'MOFU'
+                                  ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                                  : 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'
+                              }`}
+                            >
+                              {journey}
+                            </span>
+                          </td>
+
+                          {/* Live Quick Status Selector */}
+                          <td className="px-3 py-3 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                            <select
+                              value={status}
+                              onChange={(e) => handleQuickStatusChange(art.id, e.target.value as any, e as any)}
+                              className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                                status === 'Published'
+                                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
+                                  : status === 'Ready'
+                                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
+                                  : status === 'Generated'
+                                  ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300'
+                                  : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                              }`}
+                            >
+                              <option value="Published">Published</option>
+                              <option value="Ready">Ready</option>
+                              <option value="Generated">Generated</option>
+                              <option value="Draft">Draft</option>
+                            </select>
+                          </td>
+
+                          {/* Actions */}
+                          <td className="px-4 py-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-center justify-end gap-1.5">
+                              <a
+                                href={`/prompt-builder?articleId=${art.id}`}
+                                className="flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-600 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-400"
+                              >
+                                <Sparkles className="h-3 w-3" />
+                                <span>Prompt</span>
+                              </a>
+
+                              <button
+                                onClick={() => setEditingArticle(art)}
+                                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800"
+                                title="Edit artikel"
+                              >
+                                <Edit2 className="h-3.5 w-3.5" />
+                              </button>
+
+                              <button
+                                onClick={(e) => handleDeleteArticle(art.id, e)}
+                                className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/50"
+                                title="Hapus artikel"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={8} className="py-16 text-center">
+                        <div className="mx-auto flex max-w-sm flex-col items-center justify-center px-4">
+                          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
+                            <FileSpreadsheet className="h-8 w-8" />
+                          </div>
+                          {calendar.length === 0 ? (
+                            <>
+                              <h3 className="mt-4 text-base font-bold text-slate-900 dark:text-white">
+                                Project Baru: Belum Ada Artikel (Mulai dari 0)
+                              </h3>
+                              <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Project <span className="font-semibold text-slate-700 dark:text-slate-300">{project?.name || 'ini'}</span> masih bersih tanpa artikel. Anda dapat menambahkan artikel secara bertahap atau mengimpor file Excel Content Calendar Anda.
+                              </p>
+                              <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
+                                <button
+                                  onClick={() => setIsAddModalOpen(true)}
+                                  className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition-all"
+                                >
+                                  <Plus className="h-4 w-4" />
+                                  <span>Tambah Artikel Pertama</span>
+                                </button>
+                                <button
+                                  onClick={() => setIsImportModalOpen(true)}
+                                  className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                                >
+                                  <Upload className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                  <span>Import File Excel</span>
+                                </button>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <h3 className="mt-3 text-sm font-bold text-slate-800 dark:text-slate-200">
+                                Tidak Ada Artikel yang Sesuai Filter
+                              </h3>
+                              <p className="mt-1 text-xs text-slate-500">
+                                Coba ubah kata kunci pencarian atau reset filter di atas.
+                              </p>
+                              <button
+                                onClick={resetFilters}
+                                className="mt-3 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-600 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-400"
+                              >
+                                Reset Filter
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
@@ -770,8 +1025,8 @@ const ContentCalendarInner: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-soft dark:border-slate-800 dark:bg-slate-900">
-            <div className="mx-auto flex max-w-md flex-col items-center justify-center">
+          <div className="rounded-2xl border border-slate-200 bg-white p-8 sm:p-12 text-center shadow-soft dark:border-slate-800 dark:bg-slate-900">
+            <div className="mx-auto flex w-full max-w-sm flex-col items-center justify-center px-4">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
                 <FileSpreadsheet className="h-8 w-8" />
               </div>
@@ -783,17 +1038,17 @@ const ContentCalendarInner: React.FC = () => {
                   <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                     Project <span className="font-semibold text-slate-700 dark:text-slate-300">{project?.name || 'ini'}</span> masih bersih tanpa artikel. Anda dapat menambahkan artikel secara bertahap atau mengimpor file Excel Content Calendar Anda.
                   </p>
-                  <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
+                  <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full">
                     <button
                       onClick={() => setIsAddModalOpen(true)}
-                      className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition-all"
+                      className="flex items-center justify-center w-full sm:w-auto gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition-all"
                     >
                       <Plus className="h-4 w-4" />
                       <span>Tambah Artikel Pertama</span>
                     </button>
                     <button
                       onClick={() => setIsImportModalOpen(true)}
-                      className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                      className="flex items-center justify-center w-full sm:w-auto gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                     >
                       <Upload className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       <span>Import File Excel</span>
@@ -823,8 +1078,8 @@ const ContentCalendarInner: React.FC = () => {
 
       {/* MODAL 1: ADD NEW ARTICLE MODAL */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-3 sm:p-4 backdrop-blur-sm">
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 Tambah Artikel Kalender Baru
@@ -930,8 +1185,8 @@ const ContentCalendarInner: React.FC = () => {
 
       {/* MODAL 2: EDIT ARTICLE MODAL */}
       {editingArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-3 sm:p-4 backdrop-blur-sm">
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 Edit Artikel Kalender
@@ -1022,8 +1277,8 @@ const ContentCalendarInner: React.FC = () => {
 
       {/* MODAL 3: ARTICLE STRATEGY DETAIL DRAWER */}
       {selectedArticleDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-3 sm:p-4 backdrop-blur-sm">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
             <div className="flex items-start justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
               <div>
                 <div className="flex items-center gap-2">

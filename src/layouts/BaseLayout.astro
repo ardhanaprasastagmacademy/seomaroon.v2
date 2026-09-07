@@ -101,9 +101,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://seopromp
     {isAppLayout ? (
       <div class="flex min-h-screen flex-col">
         <AppNavbar client:load activePage={activePage} />
-        <div class="flex flex-1">
+        <div class="flex flex-1 min-w-0">
           <AppSidebar currentPath={activePage || Astro.url.pathname} />
-          <main class="flex-1 px-4 py-6 md:pl-64 md:pr-8 md:py-8">
+          <main class="flex-1 min-w-0 w-full px-3 py-4 sm:px-6 sm:py-6 md:pl-64 md:pr-8 md:py-8 overflow-x-hidden">
             <slot />
           </main>
         </div>

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { LoginPageView } from '@/components/auth/LoginPageView';
+---
+
+<BaseLayout
+  title="Login & Daftar Akun — SEO Prompt Studio"
+  description="Masuk ke akun Anda untuk mengelola project SEO pribadi, kalender konten, dan master prompt terpadu yang terisolasi aman."
+  isAppLayout={false}
+  activePage="/login"
+>
+  <LoginPageView client:only="react" />
+</BaseLayout>

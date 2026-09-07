@@ -16,8 +16,7 @@ import {
   Upload,
   Zap,
   Tag,
-  ExternalLink,
-  RefreshCw
+  ExternalLink
 } from 'lucide-react';
 import type { Project, ContentArticle, PromptTemplate, GeneratedPrompt } from '@/types';
 
@@ -27,7 +26,6 @@ const DashboardOverviewInner: React.FC = () => {
   const [calendar, setCalendar] = useState<ContentArticle[]>([]);
   const [templates, setTemplates] = useState<PromptTemplate[]>([]);
   const [generatedPrompts, setGeneratedPrompts] = useState<GeneratedPrompt[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Instant synchronous render from localStorage memory
@@ -48,17 +46,6 @@ const DashboardOverviewInner: React.FC = () => {
     setCalendar(store.getCalendar(curProject?.id));
     setTemplates(store.getTemplates());
     setGeneratedPrompts(store.getGeneratedPrompts(curProject?.id));
-  };
-
-  const handleSyncCloud = async () => {
-    setIsLoading(true);
-    await Promise.all([
-      store.fetchProjectsFromSupabase(),
-      store.fetchCalendarFromSupabase(),
-      store.fetchTemplatesFromSupabase(),
-      store.fetchGeneratedPromptsFromSupabase(),
-    ]);
-    setIsLoading(false);
   };
 
   // Status breakdown
@@ -103,14 +90,6 @@ const DashboardOverviewInner: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
-            <button
-              onClick={handleSyncCloud}
-              disabled={isLoading}
-              className="flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-3.5 py-2.5 text-xs font-semibold text-white backdrop-blur hover:bg-white/20 disabled:opacity-50"
-            >
-              <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-              <span>{isLoading ? 'Syncing...' : 'Sync Cloud'}</span>
-            </button>
             <a
               href="/prompt-builder"
               className="flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-blue-700 shadow-md transition-all hover:bg-blue-50 hover:shadow-lg"
@@ -197,7 +176,7 @@ const DashboardOverviewInner: React.FC = () => {
           </div>
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-3xl font-black text-slate-900 dark:text-white">{templates.length}</span>
-            <span className="text-[11px] font-medium text-amber-600">Template 04-40</span>
+            <span className="text-[11px] font-medium text-amber-600">Master Terpadu</span>
           </div>
           <a href="/templates-manager" className="mt-3 flex items-center gap-1 text-[11px] font-semibold text-amber-600 hover:underline dark:text-amber-400">
             <span>Jelajahi Library Template</span>

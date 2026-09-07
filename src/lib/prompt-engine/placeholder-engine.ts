@@ -33,23 +33,36 @@ export function humanizeKey(key: string): string {
 export function detectSchemaFromMarkdown(markdown: string): TemplateFieldSchema[] {
   const keys = extractPlaceholders(markdown);
   return keys.map(key => {
-    const isRequired = ['article_title', 'primary_keyword', 'language'].includes(key);
+    const isRequired = ['article_title', 'primary_keyword', 'language', 'target_location'].includes(key);
     let defaultSource: FieldSource = 'MANUAL';
 
-    if (['article_title', 'primary_keyword', 'supporting_keywords', 'slug', 'content_type', 'cta', 'funnel_stage'].includes(key)) {
+    if (['article_title', 'primary_keyword', 'supporting_keywords', 'slug', 'content_type', 'cta', 'funnel_stage', 'product_category'].includes(key)) {
       defaultSource = 'EXCEL';
-    } else if (['tone_of_voice', 'language', 'business_name', 'target_location', 'estimated_length'].includes(key)) {
+    } else if (['tone_of_voice', 'tone', 'language', 'business_name', 'target_location', 'estimated_length'].includes(key)) {
       defaultSource = 'PROJECT';
-    } else if (['search_intent', 'query_fan_out', 'outline_structure', 'target_audience', 'schema_markup', 'internal_links', 'main_questions'].includes(key)) {
+    } else if ([
+      'search_intent', 'query_fan_out', 'outline_structure', 'target_audience', 'schema_markup',
+      'internal_links', 'main_questions', 'cluster_topics', 'entity_nodes', 'buying_criteria',
+      'budget_options', 'recommended_list', 'item_a_name', 'item_b_name', 'value_propositions',
+      'objections_handling', 'prerequisites', 'step_outline', 'common_mistakes', 'content_gaps',
+      'existing_content_summary', 'detected_serp_intent', 'competitor_angles', 'service_areas',
+      'local_benefits', 'pricing_packages'
+    ].includes(key)) {
       defaultSource = 'DERIVED';
     }
+
+    const isLongText = [
+      'outline_structure', 'query_fan_out', 'internal_links', 'existing_content_summary',
+      'cluster_topics', 'recommended_list', 'prerequisites', 'step_outline', 'common_mistakes',
+      'content_gaps', 'pricing_packages', 'objections_handling'
+    ].includes(key);
 
     return {
       key,
       label: humanizeKey(key),
       required: isRequired,
       default_source: defaultSource,
-      type: ['outline_structure', 'query_fan_out', 'internal_links', 'existing_content_summary'].includes(key) ? 'textarea' : 'text'
+      type: isLongText ? 'textarea' : 'text'
     };
   });
 }
@@ -121,6 +134,11 @@ export function autoMapTemplateFields(
       if (key === 'content_cluster' && article.content_cluster) {
         values[key] = article.content_cluster;
         sources[key] = 'EXCEL';
+        continue;
+      }
+      if (key === 'product_category') {
+        values[key] = article.content_cluster || project?.industry || 'Katalog Produk & Solusi';
+        sources[key] = article.content_cluster ? 'EXCEL' : 'PROJECT';
         continue;
       }
     }

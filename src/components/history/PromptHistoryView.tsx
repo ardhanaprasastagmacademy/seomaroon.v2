@@ -16,7 +16,6 @@ import {
   X,
   Sparkles,
   CalendarDays,
-  RefreshCw,
   Clock,
   Tag
 } from 'lucide-react';
@@ -26,31 +25,17 @@ const PromptHistoryViewInner: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPromptPreview, setSelectedPromptPreview] = useState<GeneratedPrompt | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    loadHistory(false);
+    loadHistory();
     const unsubscribe = store.subscribe(() => {
-      loadHistory(false);
+      loadHistory();
     });
     return () => unsubscribe();
   }, []);
 
-  const loadHistory = async (fetchCloud = false) => {
+  const loadHistory = () => {
     setPrompts(store.getGeneratedPrompts());
-    if (fetchCloud) {
-      setIsLoading(true);
-      await store.fetchGeneratedPromptsFromSupabase();
-      setPrompts(store.getGeneratedPrompts());
-      setIsLoading(false);
-    }
-  };
-
-  const handleRefreshCloud = async () => {
-    setIsLoading(true);
-    await store.fetchGeneratedPromptsFromSupabase();
-    setPrompts(store.getGeneratedPrompts());
-    setIsLoading(false);
   };
 
   const filteredPrompts = prompts.filter((p) => {
@@ -116,15 +101,6 @@ const PromptHistoryViewInner: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleRefreshCloud}
-            disabled={isLoading}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 text-emerald-600 ${isLoading ? 'animate-spin' : ''}`} />
-            <span>{isLoading ? 'Syncing...' : 'Sync Cloud'}</span>
-          </button>
-
           <a
             href="/prompt-builder"
             className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700"

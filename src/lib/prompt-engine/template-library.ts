@@ -2,612 +2,393 @@ import type { PromptTemplate } from '@/types';
 
 export const INITIAL_PROMPT_TEMPLATES: PromptTemplate[] = [
   {
-    id: 'tpl-04',
-    number: 4,
-    name: 'Turunan 3 Penulisan Artikel SEO AEO GEO Master',
+    id: 'tpl-01',
+    number: 1,
+    name: 'Master SEO/AEO/GEO Ultimate Pillar & Semantic Authority',
     category: 'SEO',
-    version: '1.0',
+    version: '2.0',
     is_active: true,
-    description: 'Master prompt standar industri untuk artikel SEO mendalam dengan optimasi Answer Engine (AEO) & Generative Engine Optimization (GEO).',
+    description: 'Master prompt all-in-one terlengkap untuk artikel pilar otoritas tinggi yang mendominasi peringkat #1 Google sekaligus di-sitasi akurat oleh AI Answer Engines (Perplexity, ChatGPT, Gemini, Claude). Menggabungkan Pillar Hub, Entity Knowledge Graph, dan GEO Citations.',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     input_schema: [
-      { key: 'article_title', label: 'Judul Artikel', required: true, default_source: 'EXCEL' },
+      { key: 'article_title', label: 'Judul Artikel Pillar', required: true, default_source: 'EXCEL' },
       { key: 'primary_keyword', label: 'Target Keyword Utama', required: true, default_source: 'EXCEL' },
       { key: 'supporting_keywords', label: 'Supporting Keywords / LSI', required: false, default_source: 'EXCEL' },
       { key: 'slug', label: 'URL Slug', required: false, default_source: 'EXCEL' },
       { key: 'content_type', label: 'Tipe / Format Konten', required: false, default_source: 'EXCEL' },
       { key: 'estimated_length', label: 'Estimasi Panjang Kata', required: false, default_source: 'PROJECT' },
       { key: 'search_intent', label: 'Intent Utama', required: false, default_source: 'DERIVED' },
-      { key: 'funnel_stage', label: 'Funnel / Journey Stage', required: false, default_source: 'EXCEL' },
       { key: 'target_audience', label: 'Target Audience Persona', required: false, default_source: 'DERIVED' },
       { key: 'main_questions', label: 'Pertanyaan Utama Pembaca', required: false, default_source: 'DERIVED' },
-      { key: 'query_fan_out', label: 'Query Fan-Out (Minimal 5 Pertanyaan Terkait)', required: false, default_source: 'DERIVED' },
-      { key: 'outline_structure', label: 'Struktur Outline (H1 - H3)', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'Call to Action (CTA) Utama', required: false, default_source: 'EXCEL' },
+      { key: 'query_fan_out', label: 'Query Fan-Out (Variasi Pencarian AI)', required: false, default_source: 'DERIVED' },
+      { key: 'outline_structure', label: 'Struktur Outline Modular (H1 - H3)', required: false, default_source: 'DERIVED' },
+      { key: 'cluster_topics', label: 'Topik Cluster & Internal Linking Hub', required: false, default_source: 'DERIVED' },
+      { key: 'entity_nodes', label: 'Semantic Entities & Knowledge Graph', required: false, default_source: 'DERIVED' },
       { key: 'internal_links', label: 'Rekomendasi Internal Links', required: false, default_source: 'DERIVED' },
       { key: 'schema_markup', label: 'Schema Wajib (Structured Data)', required: false, default_source: 'DERIVED' },
+      { key: 'cta', label: 'Call to Action (CTA) Utama', required: false, default_source: 'EXCEL' },
       { key: 'statistics', label: 'Data / Statistik Pendukung', required: false, default_source: 'MANUAL' },
-      { key: 'sources', label: 'Sumber yang Akan Dikutip', required: false, default_source: 'MANUAL' },
+      { key: 'sources', label: 'Sumber Otoritas yang Dikutip', required: false, default_source: 'MANUAL' },
       { key: 'tone_of_voice', label: 'Tone of Voice', required: false, default_source: 'PROJECT' },
       { key: 'language', label: 'Bahasa Penulisan', required: true, default_source: 'PROJECT' },
     ],
-    template_markdown: `# MASTER PROMPT — PENULISAN ARTIKEL SEO / AEO / GEO (TEMPLATE 04)
+    template_markdown: `# MASTER PROMPT — ULTIMATE SEO / AEO / GEO PILLAR & SEMANTIC AUTHORITY (TEMPLATE 01)
 
-Kamu adalah seorang Senior SEO & AEO/GEO Content Strategist serta Copywriter profesional berstandar internasional. Tugasmu adalah menulis artikel komprehensif, orisinal, bernilai tinggi, dan teroptimasi penuh untuk mesin pencari tradisional (Google) maupun AI Answer Engines (Perplexity, ChatGPT Search, Gemini, Claude).
+Kamu adalah seorang Principal SEO Strategist, AEO/GEO Architect, dan Subject Matter Expert berstandar global. Tugasmu adalah menyusun artikel pilar (Ultimate Authority Guide) yang komprehensif, orisinal, bernilai referensi tinggi, dan teroptimasi secara mutlak untuk mesin pencari konvensional (Google Search) maupun Generative Answer Engines (ChatGPT Search, Perplexity, Google AI Overviews, Claude, Gemini).
 
 ---
 
-## 1. DATA INPUT & STRATEGI KONTEN
+## 1. PARAMETER STRATEGIS & KONTEN
 
 - **Judul Artikel:** {{article_title}}
 - **Target Keyword Utama:** {{primary_keyword}}
 - **Supporting Keywords / LSI:** {{supporting_keywords}}
 - **URL Slug:** {{slug}}
 - **Tipe / Format Konten:** {{content_type}}
-- **Estimasi Panjang:** {{estimated_length}}
+- **Estimasi Panjang Kata:** {{estimated_length}}
 - **Search Intent:** {{search_intent}}
-- **Funnel Stage:** {{funnel_stage}}
-- **Target Audience:** {{target_audience}}
+- **Target Audience Persona:** {{target_audience}}
 - **Pertanyaan Utama Pembaca:** {{main_questions}}
-- **Query Fan-Out (Variasi Pencarian Semantik):**
+- **Semantic Entities & Relasi Knowledge Graph:** {{entity_nodes}}
+- **Sub-Topik Cluster & Spoke Linking:** {{cluster_topics}}
+- **Query Fan-Out (AI Multi-Perspective Questions):**
 {{query_fan_out}}
-- **Struktur Outline Wajib:**
+- **Struktur Outline Wajib (H1 - H3):**
 {{outline_structure}}
 - **Target CTA Konversi:** {{cta}}
 - **Rekomendasi Internal Links:**
 {{internal_links}}
-- **Schema Markup Wajib:** {{schema_markup}}
+- **Rekomendasi Schema Markup:** {{schema_markup}}
 - **Data & Statistik Pendukung:** {{statistics}}
-- **Sumber / Otoritas yang Dikutip:** {{sources}}
+- **Sumber Otoritas yang Dikutip:** {{sources}}
 - **Tone of Voice:** {{tone_of_voice}}
 - **Bahasa:** {{language}}
 
 ---
 
-## 2. PANDUAN PENULISAN & FRAMEWORK KUALITAS (E-E-A-T + GEO)
+## 2. STANDAR EKSEKUSI KONTEN (E-E-A-T + GEO CITATION FRAMEWORK)
 
-1. **Direct Answer (Snippet Ready):** Pada 100 kata pertama, berikan jawaban langsung, ringkas, dan jelas terhadap pertanyaan inti pembaca agar mudah diambil sebagai Google Featured Snippet atau AI Answer summary.
-2. **Struktur Heading Logis:** Gunakan 1 tag H1 (Judul), lalu H2 dan H3 secara terstruktur. Jangan lewati tingkatan heading.
-3. **Penyebaran Keyword Alami:** Integrasikan Target Keyword Utama di H1, paragraf pertama, minimal satu H2, dan tersebar secara natural (densitas 1-1.5%). Sertakan Supporting Keywords di sub-heading yang relevan.
-4. **Elemen Visual & Interaktif:** Sertakan tabel perbandingan, bullet point terstruktur, callout box tips penting, dan panduan langkah demi langkah.
-5. **AEO / GEO Optimization:** Buat bagian FAQ (Frequently Asked Questions) di bagian akhir dengan jawaban ringkas (40-60 kata per pertanyaan) yang menjawab query fan-out.
-6. **Internal Link Contextual:** Sisipkan penempatan internal links yang direkomendasikan pada anchor text yang natural.
-7. **Actionable CTA:** Akhiri artikel dengan kesimpulan tegas dan Call to Action sesuai target konversi di atas.
+1. **Direct Answer (Featured Snippet Ready):** Pada 80-100 kata pertama setelah H1, berikan jawaban langsung, ringkas, dan jelas terhadap inti masalah atau pertanyaan pembaca tanpa pembukaan klise/basa-basi.
+2. **Topical Hub & Interlinking Architecture:** Sajikan artikel ini sebagai pilar induk. Berikan hook alami yang mengarahkan pembaca ke artikel turunan (spoke articles) berdasarkan daftar cluster terkait.
+3. **Entity Triples & Factual Density (GEO):** Gunakan pola Subjek-Predikat-Objek yang tegas saat menjelaskan konsep teknis agar mudah diproses oleh Information Extraction LLM untuk dijadikan referensi kutipan (source citation).
+4. **Struktur Heading Ketat (Hierarchy):** Gunakan tepat 1 tag H1. Lanjutkan dengan H2 untuk topik utama dan H3 untuk rincian sub-topik. Sisipkan keyword utama di H1, intro, dan minimal satu H2 secara natural (densitas 1-1.5%).
+5. **Elemen Visual & Scannability:** Sertakan minimal 1 tabel ringkasan perbandingan/matriks data, bullet list terstruktur, dan callout tips praktis untuk mempermudah pembaca memahami poin penting dalam hitungan detik.
+6. **AEO Answer FAQ Blocks:** Pada bagian akhir artikel, sertakan bagian FAQ dengan 4-6 pertanyaan dari Query Fan-Out. Setiap jawaban dibuat padat (40-60 kata) dengan jawaban langsung di kalimat pertama.
+7. **JSON-LD Schema Snippet:** Di baris terbawah artikel, cantumkan contoh kode JSON-LD yang valid untuk schema \`Article\` dan \`FAQPage\`.
+8. **Actionable CTA:** Akhiri dengan kesimpulan berwawasan ke depan dan ajakan bertindak (CTA) yang selaras dengan target konversi di atas.
 
-Tuliskan artikel lengkap sekarang dalam format Markdown yang rapi dan siap dipublikasikan.`
+Tuliskan artikel lengkap sekarang dalam format Markdown yang rapi, profesional, dan siap dipublikasikan.`
   },
   {
-    id: 'tpl-05',
-    number: 5,
-    name: 'SEO Content Refresh & Ranking Booster',
-    category: 'SEO',
-    version: '1.0',
+    id: 'tpl-02',
+    number: 2,
+    name: 'Commercial Comparison, Best Round-Up & Buyer\'s Decision Engine',
+    category: 'E-Commerce',
+    version: '2.0',
     is_active: true,
-    description: 'Prompt untuk memperbarui, memperluas, dan mengoptimasi ulang artikel lama yang mengalami penurunan peringkat di SERP.',
+    description: 'Prompt panduan pembelian komparatif (Comparison VS, Best Picks Round-up, Buying Guide) dengan commercial & transactional intent tinggi untuk mengonversi pencari menjadi pembeli melalui review objektif dan rekomendasi tegas.',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     input_schema: [
-      { key: 'article_title', label: 'Judul Artikel Lama', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Target Keyword', required: true, default_source: 'EXCEL' },
-      { key: 'supporting_keywords', label: 'Supporting Keywords / Lost Keywords', required: false, default_source: 'EXCEL' },
-      { key: 'slug', label: 'URL Slug', required: false, default_source: 'EXCEL' },
-      { key: 'existing_content_summary', label: 'Ringkasan Konten Saat Ini', required: false, default_source: 'MANUAL' },
-      { key: 'content_gaps', label: 'Content Gaps & Missing Entities', required: false, default_source: 'DERIVED' },
-      { key: 'query_fan_out', label: 'Pertanyaan Baru / Trend Terkini', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'Target CTA Baru', required: false, default_source: 'EXCEL' },
+      { key: 'article_title', label: 'Judul Panduan / Perbandingan', required: true, default_source: 'EXCEL' },
+      { key: 'primary_keyword', label: 'Keyword Komparasi / Produk', required: true, default_source: 'EXCEL' },
+      { key: 'supporting_keywords', label: 'Supporting Keywords / Brand LSI', required: false, default_source: 'EXCEL' },
+      { key: 'product_category', label: 'Kategori Produk / Solusi', required: false, default_source: 'EXCEL' },
+      { key: 'item_a_name', label: 'Produk / Opsi A', required: false, default_source: 'DERIVED' },
+      { key: 'item_b_name', label: 'Produk / Opsi B', required: false, default_source: 'DERIVED' },
+      { key: 'buying_criteria', label: 'Kriteria & Parameter Evaluasi', required: false, default_source: 'DERIVED' },
+      { key: 'recommended_list', label: 'Daftar Produk / Opsi Rekomendasi', required: false, default_source: 'DERIVED' },
+      { key: 'budget_options', label: 'Opsi Rentang Budget / Harga', required: false, default_source: 'DERIVED' },
+      { key: 'objections_handling', label: 'Jawaban atas Keraguan Calon Pembeli', required: false, default_source: 'DERIVED' },
+      { key: 'cta', label: 'Target CTA Transaksi / Katalog', required: false, default_source: 'EXCEL' },
       { key: 'tone_of_voice', label: 'Tone of Voice', required: false, default_source: 'PROJECT' },
       { key: 'language', label: 'Bahasa Penulisan', required: true, default_source: 'PROJECT' },
     ],
-    template_markdown: `# MASTER PROMPT — CONTENT REFRESH & RANKING BOOSTER (TEMPLATE 05)
+    template_markdown: `# MASTER PROMPT — COMMERCIAL COMPARISON & BUYER'S DECISION ENGINE (TEMPLATE 02)
 
-Kamu adalah SEO Audit & Content Optimization Specialist. Tugasmu adalah memperbarui dan merevitalisasi artikel blog lama agar kembali mendominasi halaman pertama Google dan meningkatkan engagement pembaca.
+Kamu adalah seorang Senior Product Evaluator, Commercial Copywriter, dan SEO E-Commerce Specialist independen yang objektif dan kredibel. Tugasmu adalah menulis panduan pembelian dan komparasi produk/solusi yang mendalam, jujur, serta membantu calon pembeli mengambil keputusan transaksi terbaik tanpa keraguan.
 
 ---
 
-## 1. INFORMASI KONTEN
+## 1. PARAMETER EVALUASI & PRODUK
 
 - **Judul Artikel:** {{article_title}}
-- **Target Keyword Utama:** {{primary_keyword}}
-- **Supporting / Lost Keywords:** {{supporting_keywords}}
-- **URL Slug:** {{slug}}
-- **Ringkasan Konten Lama:** {{existing_content_summary}}
-- **Content Gaps & Topik yang Hilang:**
-{{content_gaps}}
-- **Pencarian Baru / Trend Terkini:**
-{{query_fan_out}}
-- **Target CTA:** {{cta}}
-- **Tone:** {{tone_of_voice}}
-- **Bahasa:** {{language}}
-
----
-
-## 2. INSTRUKSI OPTIMASI REFRESH
-
-1. **Audit & Hook Baru:** Tulis intro yang jauh lebih kuat dan relevan untuk tahun ini dengan memasukkan data terbaru.
-2. **Isi Content Gap:** Tambahkan subtopik baru yang secara mendalam membahas celah informasi yang teridentifikasi.
-3. **Format Lebih Mudah Discan:** Ubah paragraf panjang menjadi poin-poin, tabel komparasi, dan visual takeaways.
-4. **FAQ Update:** Perbarui bagian FAQ dengan pertanyaan terkini yang sering ditanyakan pencari.
-5. **Output:** Tuliskan versi artikel yang sudah direvisi secara utuh dalam format Markdown.`
-  },
-  {
-    id: 'tpl-06',
-    number: 6,
-    name: 'Pillar Page Authority Hub Builder',
-    category: 'SEO',
-    version: '1.0',
-    is_active: true,
-    description: 'Prompt untuk membangun artikel pilar otoritas tinggi yang menjadi pusat internal linking bagi cluster konten.',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    input_schema: [
-      { key: 'article_title', label: 'Judul Pillar Page', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Head Keyword (Pillar)', required: true, default_source: 'EXCEL' },
-      { key: 'cluster_topics', label: 'Daftar Sub-Topik Cluster', required: false, default_source: 'EXCEL' },
-      { key: 'supporting_keywords', label: 'Supporting Keywords', required: false, default_source: 'EXCEL' },
-      { key: 'target_audience', label: 'Target Audience', required: false, default_source: 'DERIVED' },
-      { key: 'outline_structure', label: 'Comprehensive Pillar Outline', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'Pillar CTA', required: false, default_source: 'EXCEL' },
-      { key: 'tone_of_voice', label: 'Tone', required: false, default_source: 'PROJECT' },
-      { key: 'language', label: 'Bahasa', required: true, default_source: 'PROJECT' },
-    ],
-    template_markdown: `# MASTER PROMPT — PILLAR PAGE AUTHORITY BUILDER (TEMPLATE 06)
-
-Kamu adalah Top-Tier Content Architect. Buatlah sebuah **Pillar Page (Ultimate Guide)** yang mendalam dan komprehensif untuk membangun Topical Authority di industri ini.
-
----
-
-## 1. PARAMETER PILLAR
-
-- **Judul Pillar:** {{article_title}}
-- **Target Head Keyword:** {{primary_keyword}}
-- **Sub-Topik / Cluster Konten Terkait:** {{cluster_topics}}
+- **Target Keyword Komersial:** {{primary_keyword}}
 - **Supporting Keywords:** {{supporting_keywords}}
-- **Target Audience:** {{target_audience}}
-- **Struktur Outline Pillar:**
-{{outline_structure}}
-- **Call to Action Utama:** {{cta}}
-- **Tone:** {{tone_of_voice}}
+- **Kategori Produk / Solusi:** {{product_category}}
+- **Subjek A (Jika Komparasi VS):** {{item_a_name}}
+- **Subjek B (Jika Komparasi VS):** {{item_b_name}}
+- **Kriteria & Parameter Evaluasi:** {{buying_criteria}}
+- **Daftar Rekomendasi Produk / Pilihan:**
+{{recommended_list}}
+- **Opsi Rentang Budget:** {{budget_options}}
+- **Jawaban Keraguan Pembeli (Objection Handling):** {{objections_handling}}
+- **Target Call to Action:** {{cta}}
+- **Tone of Voice:** {{tone_of_voice}}
 - **Bahasa:** {{language}}
 
 ---
 
-## 2. STANDAR EKSEKUSI PILLAR PAGE
+## 2. STRUKTUR & PANDUAN PENULISAN KOMPARATIF
 
-1. **Definisi Holistik:** Mulai dengan konsep fundamental yang paling mudah dipahami lalu melangkah ke strategi tingkat lanjut.
-2. **Hub Internal Linking:** Berikan rangkuman ringkas untuk setiap subtopik cluster dengan penanda jelas untuk menautkan link ke artikel turunan (spoke articles).
-3. **Interactive Navigation:** Tuliskan format Table of Contents (Daftar Isi) yang interaktif.
-4. **Key Takeaways & Infographic Summary Table:** Sediakan tabel ringkasan eksekutif yang merangkum keseluruhan topik.
-5. **Panjang & Kedalaman:** Pastikan konten mendalam dan bernilai referensi jangka panjang.`
+1. **Executive Verdict & Quick Decision Table:** Di awal artikel, langsung sajikan tabel matriks komparasi cepat (Item, Skor Kualitas, Keunggulan Utama, Kisaran Harga, Pemenang / Rekomendasi Ideal) agar pembeli yang terburu-buru bisa segera mengambil keputusan.
+2. **Framework Kriteria Pemilihan (Buying Criteria):** Uraikan 4-6 parameter kritis yang wajib dicek pembeli sebelum membeli (material, spesifikasi teknis, garansi, efisiensi operasional, dan purnajual).
+3. **Itemized Deep-Dive Reviews:** Ulas setiap produk/opsi dengan struktur teratur:
+   - *Overview Singkat & Target Pengguna Ideal*
+   - *Kelebihan Utama (Pros)*
+   - *Kekurangan / Batasan yang Perlu Diperhatikan (Cons)*
+   - *Verdict Nilai Investasi (Value for Money)*
+4. **Head-to-Head Battle Scenarios:** Tuliskan panduan skenario nyata:
+   - "Pilih [Opsi A] jika Anda memprioritaskan..."
+   - "Pilih [Opsi B] jika kebutuhan Anda adalah..."
+5. **Objection Buster & Risk Reversal:** Bahas kekhawatiran umum calon pembeli (seperti daya tahan, keaslian, instalasi, dan jaminan garansi resmi) dengan jawaban meyakinkan.
+6. **FAQ Pembelian & Logistik:** Sertakan 3-5 FAQ seputar cara pemesanan, pengiriman, dan klaim garansi.
+7. **Actionable Commercial CTA:** Tutup dengan panduan langkah pembelian yang mudah diikuti sesuai CTA target.
+
+Tuliskan artikel lengkap sekarang dalam format Markdown yang rapi, transparan, dan persuasif.`
   },
   {
-    id: 'tpl-07',
-    number: 7,
-    name: 'SEO Comparison & VS Guide (Commercial Intent)',
+    id: 'tpl-03',
+    number: 3,
+    name: 'Actionable Step-by-Step How-To & Problem-Solving Tutorial',
     category: 'SEO',
-    version: '1.0',
+    version: '2.0',
     is_active: true,
-    description: 'Prompt perbandingan produk/layanan A vs B untuk menangkap pencari dengan commercial investigation intent.',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    input_schema: [
-      { key: 'article_title', label: 'Judul Perbandingan', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Keyword Perbandingan (e.g. X vs Y)', required: true, default_source: 'EXCEL' },
-      { key: 'item_a_name', label: 'Subjek A', required: false, default_source: 'DERIVED' },
-      { key: 'item_b_name', label: 'Subjek B', required: false, default_source: 'DERIVED' },
-      { key: 'comparison_factors', label: 'Parameter Perbandingan', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'Target CTA Konversi', required: false, default_source: 'EXCEL' },
-      { key: 'tone_of_voice', label: 'Tone of Voice', required: false, default_source: 'PROJECT' },
-      { key: 'language', label: 'Bahasa', required: true, default_source: 'PROJECT' },
-    ],
-    template_markdown: `# MASTER PROMPT — COMPARISON & VS GUIDE (TEMPLATE 07)
-
-Kamu adalah Product Reviewer dan SEO Specialist independen yang objektif. Tulis panduan perbandingan mendalam antara dua produk/solusi untuk membantu calon pembeli mengambil keputusan terbaik.
-
----
-
-## 1. DATA INPUT PERBANDINGAN
-
-- **Judul Artikel:** {{article_title}}
-- **Target Keyword:** {{primary_keyword}}
-- **Item A:** {{item_a_name}}
-- **Item B:** {{item_b_name}}
-- **Kriteria & Parameter Evaluasi:** {{comparison_factors}}
-- **Target CTA:** {{cta}}
-- **Tone:** {{tone_of_voice}}
-- **Bahasa:** {{language}}
-
----
-
-## 2. STRUKTUR ARTIKEL PERBANDINGAN
-
-1. **Executive Summary / Quick Verdict:** Berikan tabel perbandingan langsung di awal artikel (Fitur, Kelebihan, Kekurangan, Harga, Pemenang).
-2. **Deep Dive Item A:** Analisis fitur, kelebihan, dan kelemahan spesifik Item A.
-3. **Deep Dive Item B:** Analisis fitur, kelebihan, dan kelemahan spesifik Item B.
-4. **Head-to-Head Comparison:** Bandingkan secara spesifik berdasarkan kriteria (Kinerja, Kenyamanan, Daya Tahan, Nilai Ekonomis).
-5. **Kapan Memilih A vs Kapan Memilih B:** Panduan skenario nyata untuk siapa Item A cocok dan untuk siapa Item B cocok.
-6. **Kesimpulan & Rekomendasi:** Penutup objektif dengan dorongan CTA yang tepat.`
-  },
-  {
-    id: 'tpl-08',
-    number: 8,
-    name: 'How-To & Step-by-Step Practical Guide',
-    category: 'SEO',
-    version: '1.0',
-    is_active: true,
-    description: 'Prompt panduan praktis langkah demi langkah yang teroptimasi untuk Google HowTo Schema & Featured Snippet lists.',
+    description: 'Prompt tutorial taktis dan panduan solusi langkah demi langkah (How-To) yang mudah dipraktikkan, teroptimasi untuk Google HowTo Schema, listicle featured snippets, troubleshooting anti-gagal, dan instruksi AI.',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     input_schema: [
       { key: 'article_title', label: 'Judul Panduan How-To', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Target Keyword Cara / Tutorial', required: true, default_source: 'EXCEL' },
-      { key: 'supporting_keywords', label: 'Supporting Keywords', required: false, default_source: 'EXCEL' },
-      { key: 'target_audience', label: 'Target Pembaca', required: false, default_source: 'DERIVED' },
-      { key: 'prerequisites', label: 'Persyaratan / Alat yang Dibutuhkan', required: false, default_source: 'DERIVED' },
-      { key: 'step_outline', label: 'Urutan Langkah (Step 1 to N)', required: false, default_source: 'DERIVED' },
-      { key: 'common_mistakes', label: 'Kesalahan Umum yang Harus Dihindari', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'CTA', required: false, default_source: 'EXCEL' },
-      { key: 'language', label: 'Bahasa', required: true, default_source: 'PROJECT' },
+      { key: 'primary_keyword', label: 'Target Keyword Tutorial / Cara', required: true, default_source: 'EXCEL' },
+      { key: 'supporting_keywords', label: 'Supporting Keywords / LSI', required: false, default_source: 'EXCEL' },
+      { key: 'target_audience', label: 'Target Pembaca & Tingkat Keahlian', required: false, default_source: 'DERIVED' },
+      { key: 'prerequisites', label: 'Persyaratan & Alat yang Dibutuhkan', required: false, default_source: 'DERIVED' },
+      { key: 'step_outline', label: 'Rangkaian Langkah Terstruktur', required: false, default_source: 'DERIVED' },
+      { key: 'common_mistakes', label: 'Kesalahan Umum & Cara Menghindarinya', required: false, default_source: 'DERIVED' },
+      { key: 'main_questions', label: 'Pertanyaan Penting (FAQ Tutorial)', required: false, default_source: 'DERIVED' },
+      { key: 'cta', label: 'Call to Action Solusi Terkait', required: false, default_source: 'EXCEL' },
+      { key: 'tone_of_voice', label: 'Tone of Voice', required: false, default_source: 'PROJECT' },
+      { key: 'language', label: 'Bahasa Penulisan', required: true, default_source: 'PROJECT' },
     ],
-    template_markdown: `# MASTER PROMPT — STEP-BY-STEP HOW-TO GUIDE (TEMPLATE 08)
+    template_markdown: `# MASTER PROMPT — ACTIONABLE HOW-TO & PROBLEM SOLVING GUIDE (TEMPLATE 03)
 
-Kamu adalah Expert Instructor & Technical Writer. Tuliskan panduan langkah demi langkah (How-To Guide) yang mudah diikuti oleh pemula hingga tingkat mahir.
+Kamu adalah seorang Technical Writer, Instructional Designer, dan Praktisi Lapangan yang berpengalaman. Tugasmu adalah menyusun panduan tutorial langkah demi langkah (How-To / Step-by-Step Guide) yang sangat jelas, bebas kebingungan, mudah dipraktikkan oleh pemula, serta terstruktur sempurna untuk Google HowTo Rich Snippets.
 
 ---
 
-## 1. DATA PANDUAN
+## 1. DATA PANDUAN & ALAT
 
 - **Judul Panduan:** {{article_title}}
-- **Target Keyword:** {{primary_keyword}}
+- **Target Keyword Tutorial:** {{primary_keyword}}
 - **Supporting Keywords:** {{supporting_keywords}}
 - **Target Pembaca:** {{target_audience}}
-- **Alat & Persiapan Awal:** {{prerequisites}}
-- **Rangkaian Langkah:**
+- **Prerequisites (Alat, Bahan, & Persiapan Awal):** {{prerequisites}}
+- **Rangkaian Langkah Inti:**
 {{step_outline}}
-- **Kesalahan Umum:** {{common_mistakes}}
-- **Call to Action:** {{cta}}
+- **Kesalahan Fatal yang Sering Terjadi:** {{common_mistakes}}
+- **Pertanyaan Sering Ditanyakan (FAQ):** {{main_questions}}
+- **Target CTA:** {{cta}}
+- **Tone of Voice:** {{tone_of_voice}}
 - **Bahasa:** {{language}}
 
 ---
 
-## 2. INSTRUKSI PENULISAN HOW-TO
+## 2. PROTOKOL PENULISAN TUTORIAL TAKTIS
 
-1. **Clear Overview:** Jelaskan estimasi waktu pengerjaan dan hasil yang akan didapat.
-2. **Numbered Steps:** Tulis langkah dengan penomoran H3 (Langkah 1: ..., Langkah 2: ...) dengan instruksi actionable dan jelas.
-3. **Troubleshooting Section:** Berikan solusi jika terjadi kendala pada saat menjalankan langkah tersebut.
-4. **Pro Tips:** Tambahkan callout box berupa tips efisiensi atau keselamatan.
-5. **FAQ How-To:** Sertakan 3-5 FAQ umum.`
+1. **Quick Overview Card:** Buka artikel dengan ringkasan singkat:
+   - **Tingkat Kesulitan:** (Pemula / Menengah / Lanjutan)
+   - **Estimasi Waktu Pengerjaan:** (Mis. 15-30 Menit)
+   - **Hasil Akhir yang Dijamin:** Penjelasan jelas hasil yang akan dicapai pembaca setelah menyelesaikan panduan ini.
+2. **Daftar Kebutuhan & Persiapan (Prerequisites Checklist):** Cantumkan peralatan, dokumen, atau kondisi awal yang harus siap sebelum memulai, disajikan dalam bentuk checklist interaktif.
+3. **Numbered Step-by-Step Actionable Execution:** Tuliskan setiap tahapan menggunakan format heading H3 bernomor tegas (\`### Langkah 1: [Nama Tindakan]\`, \`### Langkah 2: [Nama Tindakan]\`).
+   - Gunakan kalimat instruktif aktif ("Pasang", "Periksa", "Unduh", "Sesuaikan").
+   - Sisipkan callout box **[TIPS PRO]** untuk trik mempercepat pengerjaan.
+   - Berikan tanda peringatan **[PERHATIAN]** pada titik rawan kesalahan.
+4. **Troubleshooting & Penanganan Kendala:** Buat sub-bab khusus mengenai skenario kegagalan: *"Apa yang Harus Dilakukan Jika [X] Tidak Berfungsi?"* dengan 3-4 solusi praktis.
+5. **Kesalahan Umum (Common Mistakes to Avoid):** Ulas kesalahan yang kerap dilakukan orang beserta cara pencegahannya.
+6. **Rekomendasi HowTo Schema:** Berikan saran penandaan data terstruktur (HowTo Schema) agar memenuhi syarat tampil di Google Search Enhancements.
+7. **Next Step & Supportive CTA:** Arahkan pembaca ke langkah lanjutan atau solusi produk/layanan terkait via CTA.
+
+Tuliskan panduan lengkap sekarang dalam format Markdown yang teratur, presisi, dan mudah dieksekusi.`
   },
   {
-    id: 'tpl-11',
-    number: 11,
-    name: 'Local SEO & Geo-Targeted Landing Content',
-    category: 'Local SEO',
-    version: '1.0',
+    id: 'tpl-04',
+    number: 4,
+    name: 'SEO Content Refresh, Decay Revival & SERP Intent Realignment',
+    category: 'SEO',
+    version: '2.0',
     is_active: true,
-    description: 'Prompt penulisan konten berbasis wilayah/kota (Jakarta, Surabaya, Malang, dll.) dengan integrasi NAP, Local Intent & GEO trust signals.',
+    description: 'Prompt audit dan peremajaan konten lama yang mengalami penurunan peringkat (content decay), traffic drop, atau intent shift di SERP Google. Mengisi celah topik pesaing dan mengkalibrasi ulang angle.',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    input_schema: [
+      { key: 'article_title', label: 'Judul Artikel yang Direfresh', required: true, default_source: 'EXCEL' },
+      { key: 'primary_keyword', label: 'Target Keyword Utama', required: true, default_source: 'EXCEL' },
+      { key: 'supporting_keywords', label: 'Supporting Keywords / Lost Keywords', required: false, default_source: 'EXCEL' },
+      { key: 'slug', label: 'URL Slug Lama', required: false, default_source: 'EXCEL' },
+      { key: 'existing_content_summary', label: 'Ringkasan Konten Lama & Kelemahannya', required: false, default_source: 'MANUAL' },
+      { key: 'detected_serp_intent', label: 'Search Intent SERP Terkini', required: false, default_source: 'DERIVED' },
+      { key: 'competitor_angles', label: 'Angle Pesaing Teratas di Halaman 1', required: false, default_source: 'DERIVED' },
+      { key: 'content_gaps', label: 'Content Gaps & Entitas yang Hilang', required: false, default_source: 'DERIVED' },
+      { key: 'query_fan_out', label: 'Pencarian Baru / Trend Terkini', required: false, default_source: 'DERIVED' },
+      { key: 'cta', label: 'Target CTA Baru', required: false, default_source: 'EXCEL' },
+      { key: 'tone_of_voice', label: 'Tone of Voice', required: false, default_source: 'PROJECT' },
+      { key: 'language', label: 'Bahasa Penulisan', required: true, default_source: 'PROJECT' },
+    ],
+    template_markdown: `# MASTER PROMPT — CONTENT REFRESH, DECAY REVIVAL & INTENT REALIGNMENT (TEMPLATE 04)
+
+Kamu adalah seorang SEO Content Auditor, SERP Re-Engineering Specialist, dan Algorithmic Recovery Expert. Tugasmu adalah merombak total, memperbarui, dan merevitalisasi artikel lama yang mengalami penurunan trafik (traffic decay) atau tergeser oleh pesaing, agar kembali menduduki peringkat #1 Google dan relevan dengan standar pencarian AI saat ini.
+
+---
+
+## 1. DIAGNOSIS ARTIKEL LAMA & SERP SHIFT
+
+- **Judul Artikel:** {{article_title}}
+- **Target Keyword:** {{primary_keyword}}
+- **Supporting / Lost Keywords yang Perlu Direbut Kembali:** {{supporting_keywords}}
+- **URL Slug:** {{slug}}
+- **Kondisi Konten Lama:** {{existing_content_summary}}
+- **Analisis Search Intent Terkini:** {{detected_serp_intent}}
+- **Angle Unggulan Pesaing Halaman 1:** {{competitor_angles}}
+- **Content Gaps & Entitas yang Wajib Ditambahkan:**
+{{content_gaps}}
+- **Trend & Pertanyaan Pencarian Terbaru:**
+{{query_fan_out}}
+- **Target CTA:** {{cta}}
+- **Tone of Voice:** {{tone_of_voice}}
+- **Bahasa:** {{language}}
+
+---
+
+## 2. INSTRUKSI AUDIT & RE-OPTIMASI
+
+1. **Modernized Hook & Fresh Angle:** Buat paragraf pembuka baru yang jauh lebih kuat dengan referensi tahun terkini, menghapus data usang, dan langsung memposisikan konten sebagai panduan paling mutakhir.
+2. **Intent Calibration (SERP Alignment):** Sesuaikan kembali format artikel agar 100% selaras dengan tipe hasil yang mendominasi halaman pertama Google saat ini (mis. jika SERP beralih dari sekadar teori ke panduan berbasis perbandingan atau studi kasus).
+3. **Closing the Content Gap:** Sisipkan bagian dan sub-bab baru secara mendalam yang secara eksplisit membahas topik-topik yang sebelumnya hilang namun dibahas oleh kompetitor teratas.
+4. **Scannability & Format Upgrade:** Ubah blok teks dinding (wall of text) menjadi:
+   - Tabel komparasi ringkas
+   - Key Takeaways callout box
+   - Langkah berurutan yang mudah dipindai
+5. **Fresh FAQ Section:** Buat ulang bagian FAQ dengan menjawab query-query baru yang muncul dari AI query fan-out.
+6. **Output Final:** Tuliskan seluruh artikel hasil revisi secara lengkap dalam format Markdown, siap ganti (drop-in replacement) di CMS.
+
+Tuliskan artikel hasil pembaruan komprehensif sekarang dalam format Markdown.`
+  },
+  {
+    id: 'tpl-05',
+    number: 5,
+    name: 'Hyper-Local SEO & Geo-Targeted Commercial Landing Content',
+    category: 'Local SEO',
+    version: '2.0',
+    is_active: true,
+    description: 'Prompt khusus konten wilayah dan landing page berbasis lokasi (kota/area layanan) yang menggabungkan Local Intent, Local Trust Signals (NAP), jangkauan logistik, dan konversi cepat WhatsApp/kunjungan showroom.',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     input_schema: [
       { key: 'article_title', label: 'Judul Konten Lokal', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Keyword Lokal (e.g. Toko X di Jakarta)', required: true, default_source: 'EXCEL' },
+      { key: 'primary_keyword', label: 'Keyword Lokal (e.g. Toko X di Kota Y)', required: true, default_source: 'EXCEL' },
       { key: 'target_location', label: 'Lokasi / Kota Target', required: true, default_source: 'PROJECT' },
-      { key: 'business_name', label: 'Nama Bisnis / Brand', required: false, default_source: 'PROJECT' },
-      { key: 'service_areas', label: 'Cakupan Area / Kecamatan Terlayani', required: false, default_source: 'DERIVED' },
-      { key: 'local_benefits', label: 'Keunggulan Layanan Lokal (Pengiriman cepat, showroom)', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'CTA Lokal (WhatsApp / Telp / Kunjungan)', required: false, default_source: 'EXCEL' },
-      { key: 'language', label: 'Bahasa', required: true, default_source: 'PROJECT' },
+      { key: 'business_name', label: 'Nama Bisnis / Brand Resmi', required: false, default_source: 'PROJECT' },
+      { key: 'service_areas', label: 'Cakupan Wilayah / Kecamatan Terlayani', required: false, default_source: 'DERIVED' },
+      { key: 'local_benefits', label: 'Keunggulan Layanan Lokal & Kecepatan', required: false, default_source: 'DERIVED' },
+      { key: 'value_propositions', label: 'Jaminan Garansi & Bukti Kepercayaan', required: false, default_source: 'DERIVED' },
+      { key: 'cta', label: 'CTA Kontak Lokal (WhatsApp / Telp)', required: false, default_source: 'EXCEL' },
+      { key: 'tone_of_voice', label: 'Tone of Voice', required: false, default_source: 'PROJECT' },
+      { key: 'language', label: 'Bahasa Penulisan', required: true, default_source: 'PROJECT' },
     ],
-    template_markdown: `# MASTER PROMPT — LOCAL SEO & GEO TARGETED CONTENT (TEMPLATE 11)
+    template_markdown: `# MASTER PROMPT — HYPER-LOCAL SEO & GEO-TARGETED LANDING (TEMPLATE 05)
 
-Kamu adalah Pakar Local SEO & Google Business Profile Strategy. Tuliskan konten halaman layanan / artikel lokal yang ditargetkan untuk wilayah spesifik dengan sinyal relevansi geografis yang kuat.
+Kamu adalah seorang Local SEO Master, Google Business Profile Specialist, dan Hyper-Local Conversion Copywriter. Tugasmu adalah menulis artikel landing page / pilar lokal yang ditargetkan khusus untuk wilayah {{target_location}} dengan sinyal relevansi geografis (Local GEO) yang kuat, membangun otoritas terpercaya di mata warga lokal, dan mendorong konversi cepat.
 
 ---
 
-## 1. PARAMETER LOKAL
+## 1. PARAMETER LOKAL & BISNIS
 
 - **Judul Artikel:** {{article_title}}
 - **Target Keyword Lokal:** {{primary_keyword}}
-- **Lokasi Utama:** {{target_location}}
+- **Lokasi Utama Target:** {{target_location}}
 - **Nama Bisnis:** {{business_name}}
-- **Cakupan Wilayah / Area Layanan:** {{service_areas}}
-- **Nilai Unggul Layanan Lokal:** {{local_benefits}}
-- **Call to Action Kontak:** {{cta}}
+- **Area & Kecamatan Terlayani:** {{service_areas}}
+- **Keunggulan Layanan Lokal:** {{local_benefits}}
+- **Garansi & Nilai Kepercayaan:** {{value_propositions}}
+- **Call to Action Kontak Cepat:** {{cta}}
+- **Tone of Voice:** {{tone_of_voice}}
 - **Bahasa:** {{language}}
 
 ---
 
-## 2. FORMAT KONTEN LOCAL SEO
+## 2. FORMAT & STRATEGI LOCAL SEO DOMINATION
 
-1. **Local Geo-Hook:** Tunjukkan pemahaman mendalam tentang kebutuhan warga / bisnis di area {{target_location}}.
-2. **Penyebaran Nama Lokasi:** Integrasikan nama kota, wilayah sekitar, dan landmark terkait secara alami tanpa keyword stuffing.
-3. **Layanan & Jangkauan Pengiriman:** Buat sub-bab khusus mengenai kecepatan layanan, logistik lokal, dan garansi setempat.
-4. **Testimoni & Studi Kasus Lokal:** Sisipkan bagian bukti kepuasan pelanggan di kawasan sekitar.
-5. **Local NAP & Fast Contact CTA:** Sediakan instruksi kontak cepat via WhatsApp atau telepon.`
+1. **Local Geo-Hook:** Buka artikel dengan pemahaman mendalam terhadap kondisi dan kebutuhan nyata penduduk atau pebisnis di kawasan {{target_location}} (mis. kemacetan logistik, cuaca lokal, standar gedung, atau kebutuhan suplai mendesak).
+2. **Natural Geographic Entity Integration:** Cantumkan nama distrik, kecamatan penting, jalan protokol, dan landmark terkenal di {{target_location}} secara alami tanpa pengulangan kata yang dipaksakan (hindari keyword stuffing).
+3. **Logistik, Pengiriman, & Respon Cepat:** Uraikan secara spesifik bagaimana sistem pengiriman atau kunjungan teknisi bekerja di wilayah ini (estimasi tiba di hari yang sama, ongkos kirim hemat/gratis, dan ketersediaan armada lokal).
+4. **Bukti Sosial & Pengalaman Portofolio Lokal:** Tuliskan bagian kredibilitas yang menceritakan pengalaman menangani proyek atau melayani pelanggan di kawasan sekitar {{target_location}}.
+5. **Local Business NAP & Direct Contact:** Sajikan blok informasi kontak resmi (Nama Bisnis, Alamat Representatif, Jam Operasional, Layanan Konsultasi WhatsApp Cepat) yang selaras dengan Google Business Profile.
+6. **Schema LocalBusiness Recommendation:** Cantumkan instruksi schema structured data \`LocalBusiness\` atau \`Service\` yang relevan.
+7. **Local Direct Action CTA:** Berikan dorongan tindakan langsung dengan kemudahan konsultasi via WhatsApp / survei lokasi gratis.
+
+Tuliskan artikel konten lokal lengkap sekarang dalam format Markdown yang persuasif dan sarat otoritas wilayah.`
   },
   {
-    id: 'tpl-15',
-    number: 15,
-    name: 'E-Commerce Product Buying Guide & Round-Up',
-    category: 'E-Commerce',
-    version: '1.0',
-    is_active: true,
-    description: 'Prompt artikel kurasi produk terbaik (Best List Round-up) untuk kategori toko online / B2B procurement dengan fokus konversi.',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    input_schema: [
-      { key: 'article_title', label: 'Judul Panduan Pembelian', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Keyword Produk / Rekomendasi', required: true, default_source: 'EXCEL' },
-      { key: 'product_category', label: 'Kategori Produk', required: false, default_source: 'EXCEL' },
-      { key: 'buying_criteria', label: 'Kriteria Memilih Produk yang Baik', required: false, default_source: 'DERIVED' },
-      { key: 'recommended_list', label: 'Daftar Produk yang Direkomendasikan', required: false, default_source: 'DERIVED' },
-      { key: 'budget_options', label: 'Rentang Harga / Paket Budget', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'CTA Pembelian / Katalog', required: false, default_source: 'EXCEL' },
-      { key: 'language', label: 'Bahasa', required: true, default_source: 'PROJECT' },
-    ],
-    template_markdown: `# MASTER PROMPT — E-COMMERCE BUYING GUIDE & ROUND-UP (TEMPLATE 15)
-
-Kamu adalah E-Commerce Merchandising & SEO Conversion Copywriter. Tulis artikel rekomendasi produk terbaik dan panduan pembelian yang meyakinkan bagi calon pembeli.
-
----
-
-## 1. PARAMETER PRODUK
-
-- **Judul Artikel:** {{article_title}}
-- **Target Keyword:** {{primary_keyword}}
-- **Kategori Produk:** {{product_category}}
-- **Kriteria Pemilihan:** {{buying_criteria}}
-- **Daftar Rekomendasi Produk:**
-{{recommended_list}}
-- **Opsi Rentang Budget:** {{budget_options}}
-- **Call to Action:** {{cta}}
-- **Bahasa:** {{language}}
-
----
-
-## 2. STRUKTUR KONTEN BUYING GUIDE
-
-1. **Top Picks Summary:** Sediakan tabel ringkas produk terbaik per kategori (e.g., Terbaik Keseluruhan, Paling Terjangkau, Paling Premium).
-2. **Buying Factors (Faktor Penting):** Uraikan parameter spesifikasi teknis, material, dan garansi yang wajib diperhatikan pembeli.
-3. **Itemized Product Reviews:** Tuliskan ulasan spesifik tiap produk mencakup fitur unggulan, kelebihan, kekurangan, dan target pemakai ideal.
-4. **FAQ Pembelian & Pengiriman:** Tambahkan FAQ seputar instalasi, pengiriman, dan cara klaim garansi.`
-  },
-  {
-    id: 'tpl-20',
-    number: 20,
-    name: 'BOFU High-Conversion Sales & Solution Page',
+    id: 'tpl-06',
+    number: 6,
+    name: 'BOFU High-Conversion Solution, Sales Closer & Lead Magnet',
     category: 'SEO',
-    version: '1.0',
+    version: '2.0',
     is_active: true,
-    description: 'Prompt artikel Bottom of Funnel (BOFU) untuk target audiens yang siap membeli/transaksi dengan teknik penulisan persuasif & mengatasi keberatan.',
+    description: 'Prompt artikel Bottom-of-the-Funnel (BOFU) komersial persuasif berteknik direct-response copywriting untuk mengonversi calon pembeli/klien di tahap akhir pertimbangan menjadi prospek aktif atau transaksi langsung.',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     input_schema: [
       { key: 'article_title', label: 'Judul Konten BOFU', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Keyword Transaksional / Harga / Jasa', required: true, default_source: 'EXCEL' },
-      { key: 'value_propositions', label: 'Keunggulan Utama & Garansi', required: false, default_source: 'DERIVED' },
-      { key: 'objections_handling', label: 'Jawaban atas Keberatan Calon Klien', required: false, default_source: 'DERIVED' },
+      { key: 'primary_keyword', label: 'Keyword Transaksional / Jasa / Harga', required: true, default_source: 'EXCEL' },
+      { key: 'supporting_keywords', label: 'Supporting Keywords Komersial', required: false, default_source: 'EXCEL' },
+      { key: 'target_audience', label: 'Persona Pengambil Keputusan', required: false, default_source: 'DERIVED' },
+      { key: 'value_propositions', label: 'Keunggulan Utama & ROI Finansial', required: false, default_source: 'DERIVED' },
+      { key: 'objections_handling', label: 'Objection Handling (Mematahkan Keraguan)', required: false, default_source: 'DERIVED' },
       { key: 'pricing_packages', label: 'Skema Harga / Paket Penawaran', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'CTA Transaksi (Order Sekarang / Dapatkan Penawaran)', required: false, default_source: 'EXCEL' },
-      { key: 'language', label: 'Bahasa', required: true, default_source: 'PROJECT' },
+      { key: 'cta', label: 'Target CTA Transaksi / Order', required: false, default_source: 'EXCEL' },
+      { key: 'tone_of_voice', label: 'Tone of Voice', required: false, default_source: 'PROJECT' },
+      { key: 'language', label: 'Bahasa Penulisan', required: true, default_source: 'PROJECT' },
     ],
-    template_markdown: `# MASTER PROMPT — BOFU HIGH-CONVERSION SALES ARTICLE (TEMPLATE 20)
+    template_markdown: `# MASTER PROMPT — BOFU HIGH-CONVERSION SALES CLOSER (TEMPLATE 06)
 
-Kamu adalah Direct-Response Copywriter & Commercial SEO Specialist. Tuliskan artikel bernada komersial tinggi (BOFU) yang mengubah pembaca dengan intensi transaksi menjadi prospek / pembeli aktif.
-
----
-
-## 1. STRATEGI PENJUALAN
-
-- **Judul:** {{article_title}}
-- **Target Keyword:** {{primary_keyword}}
-- **Value Proposition Utama:** {{value_propositions}}
-- **Mengatasi Keberatan (Objection Handling):** {{objections_handling}}
-- **Penawaran / Skema Harga:** {{pricing_packages}}
-- **Target Call to Action:** {{cta}}
-- **Bahasa:** {{language}}
+Kamu adalah seorang Direct-Response Copywriter elit, Commercial Strategist, dan pakar CRO (Conversion Rate Optimization). Tugasmu adalah menyusun artikel Bottom-of-Funnel (BOFU) yang sangat persuasif dan berbobot untuk mengonversi pembaca yang sudah berada di fase evaluasi akhir agar segera mengambil tindakan pembelian atau mengajukan penawaran tanpa ragu.
 
 ---
 
-## 2. FORMAT KONTEN
-
-1. **Problem Recognition & Direct Solution:** Buka dengan masalah mendesak yang dihadapi klien dan tawarkan solusi konkret secara tegas.
-2. **Fitur vs Manfaat Finansial:** Jelaskan mengapa solusi ini menghemat biaya atau meningkatkan produktivitas dalam jangka panjang.
-3. **Price Transparency & Package Options:** Tampilkan rincian paket secara transparan dengan tabel komparasi benefit.
-4. **Risk Reversal (Garansi):** Sebutkan jaminan kepuasan, garansi uang kembali, atau konsultasi gratis tanpa komitmen.
-5. **Urgent CTA:** Pasang CTA mencolok dan jelas dengan kontak langsung.`
-  },
-  {
-    id: 'tpl-38',
-    number: 38,
-    name: 'AEO FAQ & Entity Knowledge Graph Schema Enhancer',
-    category: 'AEO/GEO',
-    version: '1.0',
-    is_active: true,
-    description: 'Prompt pengayaan entitas SEO, Knowledge Graph, dan Q&A AEO untuk mendominasi jawaban AI (ChatGPT, Perplexity, Gemini).',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    input_schema: [
-      { key: 'article_title', label: 'Topik Utama / Judul', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Keyword Inti', required: true, default_source: 'EXCEL' },
-      { key: 'entity_nodes', label: 'Entitas & Hubungan Semantic', required: false, default_source: 'DERIVED' },
-      { key: 'query_fan_out', label: 'Daftar Pertanyaan Fan-Out AI', required: false, default_source: 'DERIVED' },
-      { key: 'schema_markup', label: 'Tipe Schema yang Dibutuhkan', required: false, default_source: 'DERIVED' },
-      { key: 'language', label: 'Bahasa', required: true, default_source: 'PROJECT' },
-    ],
-    template_markdown: `# MASTER PROMPT — AEO FAQ & ENTITY ENHANCER (TEMPLATE 38)
-
-Kamu adalah AI Knowledge Graph Architect & AEO Optimizer. Buat blok konten terstruktur yang memetakan entitas semantik, Q&A berbasis data, dan JSON-LD schema snippet.
-
----
-
-## 1. INPUT ENTITAS
-
-- **Topik / Judul:** {{article_title}}
-- **Target Keyword:** {{primary_keyword}}
-- **Semantic Entities:** {{entity_nodes}}
-- **Pertanyaan AI Fan-Out:**
-{{query_fan_out}}
-- **Schema Format:** {{schema_markup}}
-- **Bahasa:** {{language}}
-
----
-
-## 2. OUTPUT YANG DIBUTUHKAN
-
-1. **Entity Definition Table:** Tabel yang menghubungkan entitas primer dengan entitas sekunder, atribut, dan relasinya.
-2. **AEO Answer Blocks:** 5-8 blok pertanyaan & jawaban berformat concise (maks 50 kata per jawaban) yang sangat disukai AI summary engines.
-3. **Valid JSON-LD Schema Snippet:** Kode schema \`FAQPage\` atau \`ItemPage\` yang valid sesuai standard schema.org.`
-  },
-  {
-    id: 'tpl-39',
-    number: 39,
-    name: 'Search Intent Realignment & SERP Intent Matcher',
-    category: 'SEO',
-    version: '1.0',
-    is_active: true,
-    description: 'Prompt kalibrasi ulang artikel untuk menyamakan search intent SERP yang berubah (mis. dari informational menjadi commercial).',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    input_schema: [
-      { key: 'article_title', label: 'Judul Artikel', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Keyword Target', required: true, default_source: 'EXCEL' },
-      { key: 'detected_serp_intent', label: 'Search Intent Terdeteksi', required: false, default_source: 'DERIVED' },
-      { key: 'competitor_angles', label: 'Angle Pesaing di Halaman 1', required: false, default_source: 'DERIVED' },
-      { key: 'revised_outline', label: 'Outline Penyesuaian Intent', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'Target CTA Baru', required: false, default_source: 'EXCEL' },
-      { key: 'language', label: 'Bahasa', required: true, default_source: 'PROJECT' },
-    ],
-    template_markdown: `# MASTER PROMPT — SEARCH INTENT REALIGNMENT (TEMPLATE 39)
-
-Kamu adalah SERP Analyst & Senior SEO Copywriter. Tulis ulang konten agar 100% selaras dengan Search Intent dominan di Google saat ini.
-
----
-
-## 1. SERP INTENT ALIGNMENT
+## 1. PARAMETER PENAWARAN & AUDIENS
 
 - **Judul Artikel:** {{article_title}}
-- **Keyword Utama:** {{primary_keyword}}
-- **Search Intent SERP Terkini:** {{detected_serp_intent}}
-- **Angle Pesaing Teratas:** {{competitor_angles}}
-- **Outline Baru:**
-{{revised_outline}}
-- **CTA:** {{cta}}
-- **Bahasa:** {{language}}
-
----
-
-## 2. TUGAS PENULISAN
-
-Tulis ulang artikel lengkap dengan angle dan format yang sesuai intent yang dominan, hilangkan bagian yang tidak relevan, dan pastikan kepuasan pembaca terpenuhi secara instan.`
-  },
-  {
-    id: 'tpl-40',
-    number: 40,
-    name: 'GEO Multi-Model Synthetic Prompt Generator',
-    category: 'AEO/GEO',
-    version: '1.0',
-    is_active: true,
-    description: 'Prompt universal generasi konten tingkat lanjut yang dirancang khusus untuk optimasi mesin LLM (Generative Engine Optimization).',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    input_schema: [
-      { key: 'article_title', label: 'Judul Artikel', required: true, default_source: 'EXCEL' },
-      { key: 'primary_keyword', label: 'Primary Keyword', required: true, default_source: 'EXCEL' },
-      { key: 'supporting_keywords', label: 'LSI & Semantic Clusters', required: false, default_source: 'EXCEL' },
-      { key: 'search_intent', label: 'Search Intent', required: false, default_source: 'DERIVED' },
-      { key: 'target_audience', label: 'Audience Persona', required: false, default_source: 'DERIVED' },
-      { key: 'query_fan_out', label: 'Multi-Perspective AI Query Fan-Out', required: false, default_source: 'DERIVED' },
-      { key: 'outline_structure', label: 'Outline Modular H1-H3', required: false, default_source: 'DERIVED' },
-      { key: 'schema_markup', label: 'Schema Architecture', required: false, default_source: 'DERIVED' },
-      { key: 'cta', label: 'Conversion CTA', required: false, default_source: 'EXCEL' },
-      { key: 'tone_of_voice', label: 'Tone', required: false, default_source: 'PROJECT' },
-      { key: 'language', label: 'Language', required: true, default_source: 'PROJECT' },
-    ],
-    template_markdown: `# MASTER PROMPT — GEO SYNTHETIC GENERATION ENGINE (TEMPLATE 40)
-
-Kamu adalah Generative Engine Optimization (GEO) Architect. Buat konten yang memaksimalkan probabilitas sitasi dan penyebutan brand oleh model AI (ChatGPT, Perplexity, Gemini, Claude).
-
----
-
-## 1. SPESIFIKASI PROMPT GEO
-
-- **Judul Artikel:** {{article_title}}
-- **Target Keyword Utama:** {{primary_keyword}}
-- **Semantic Clusters:** {{supporting_keywords}}
-- **Search Intent:** {{search_intent}}
+- **Target Keyword Transaksional:** {{primary_keyword}}
+- **Supporting Keywords:** {{supporting_keywords}}
 - **Target Audience:** {{target_audience}}
-- **Multi-Perspective Query Fan-Out:**
-{{query_fan_out}}
-- **Modular Outline:**
-{{outline_structure}}
-- **Schema Recommendations:** {{schema_markup}}
-- **Target CTA:** {{cta}}
-- **Tone:** {{tone_of_voice}}
-- **Language:** {{language}}
+- **Value Proposition Utama & ROI:** {{value_propositions}}
+- **Jawaban atas Keberatan Klien (Objection Handling):** {{objections_handling}}
+- **Skema Harga / Pilihan Paket:** {{pricing_packages}}
+- **Target CTA Utama:** {{cta}}
+- **Tone of Voice:** {{tone_of_voice}}
+- **Bahasa:** {{language}}
 
 ---
 
-## 2. PRINSIP CITATION READINESS (GEO PRINCIPLES)
+## 2. FORMULA PENULISAN PERSUASIF BOFU
 
-1. **Factual Density:** Sertakan data konkret, definisi tegas, dan metodologi yang jelas.
-2. **Clear Entity Triples:** Gunakan pola Subjek-Predikat-Objek yang mudah diproses oleh Information Extraction LLM.
-3. **Structured Comparison Matrices:** Sediakan tabel komparasi dengan metrik terukur.
-4. **Quotable Insights:** Masukkan kesimpulan ringkas berbobot yang siap dikutip oleh AI Answer Engines sebagai sumber primer.`
+1. **Problem Agitation & Cost of Inaction:** Buka dengan menyorot kerugian biaya, waktu, atau produktivitas yang timbul jika calon klien menunda menyelesaikan masalah ini atau memilih solusi murahan yang tidak andal.
+2. **Solusi Definitif & Keunggulan Komparatif:** Jelaskan mengapa solusi ini adalah pilihan paling masuk akal secara finansial dan operasional. Fokus pada hasil nyata (ROI, daya tahan jangka panjang, efisiensi kerja) bukan sekadar daftar fitur teknis.
+3. **Pilihan Paket & Transparansi Penawaran:** Sajikan perbandingan paket atau opsi pemesanan dalam tabel yang jelas, memudahkan pembeli memilih opsi yang paling cocok dengan anggaran mereka.
+4. **Objection Buster Matrix:** Selesaikan 3 keraguan terbesar klien secara terang-terangan:
+   - *"Apakah harganya sebanding?"*
+   - *"Bagaimana jika kualitasnya tidak sesuai ekspektasi?"*
+   - *"Seberapa cepat proses pengiriman & implementasinya?"*
+5. **Risk Reversal (Jaminan Kepuasan):** Sertakan garansi resmi, uji coba, konsultasi gratis tanpa ikatan, atau proteksi pengembalian untuk menghilangkan risiko di pihak pembeli.
+6. **Social Proof & Testimonial Context:** Sisipkan narasi ringkas tentang kepuasan klien serupa yang telah membuktikan hasilnya.
+7. **Frictionless Urgent CTA:** Akhiri dengan instruksi pemesanan yang sangat mudah (hanya 2-3 langkah) disertai tombol/kontak langsung menuju WhatsApp atau form pemesanan resmi.
+
+Tuliskan artikel penjualan BOFU lengkap sekarang dalam format Markdown yang elegan, profesional, dan bertenaga tinggi.`
   }
 ];
-
-// Helper to fill other template slots up to 40 for complete PRD compliance
-for (let num = 9; num <= 37; num++) {
-  if (!INITIAL_PROMPT_TEMPLATES.find(t => t.number === num)) {
-    const isLocal = num === 11 || num === 12;
-    const isEcom = num === 14 || num === 15 || num === 16;
-    const isSocial = num === 22 || num === 23;
-    const category: PromptTemplate['category'] = isLocal ? 'Local SEO' : isEcom ? 'E-Commerce' : isSocial ? 'Social' : 'SEO';
-    
-    INITIAL_PROMPT_TEMPLATES.push({
-      id: `tpl-${num < 10 ? '0' + num : num}`,
-      number: num,
-      name: `Template ${num < 10 ? '0' + num : num} — SEO Specialist Specialized Framework`,
-      category,
-      version: '1.0',
-      is_active: true,
-      description: `Template prompt teroptimasi untuk spesialisasi konten ${category} nomor ${num}.`,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      input_schema: [
-        { key: 'article_title', label: 'Judul Artikel', required: true, default_source: 'EXCEL' },
-        { key: 'primary_keyword', label: 'Target Keyword', required: true, default_source: 'EXCEL' },
-        { key: 'supporting_keywords', label: 'Supporting Keywords', required: false, default_source: 'EXCEL' },
-        { key: 'search_intent', label: 'Search Intent', required: false, default_source: 'DERIVED' },
-        { key: 'cta', label: 'CTA', required: false, default_source: 'EXCEL' },
-        { key: 'language', label: 'Bahasa', required: true, default_source: 'PROJECT' },
-      ],
-      template_markdown: `# MASTER PROMPT — SPECIALIZED FRAMEWORK (TEMPLATE ${num < 10 ? '0' + num : num})
-
-Kamu adalah SEO & Content Writing Specialist. Tuliskan artikel komprehensif berdasarkan parameter berikut:
-
----
-
-## 1. PARAMETER KONTEN
-
-- **Judul Artikel:** {{article_title}}
-- **Target Keyword Utama:** {{primary_keyword}}
-- **Supporting Keywords:** {{supporting_keywords}}
-- **Search Intent:** {{search_intent}}
-- **Target CTA:** {{cta}}
-- **Bahasa:** {{language}}
-
----
-
-## 2. INSTRUKSI PENULISAN
-
-1. Tulis artikel berbobot, terstruktur dengan rapi menggunakan Markdown (H1, H2, H3).
-2. Maksimalkan relevansi search intent dan kenyamanan membaca pengguna.
-3. Berikan kesimpulan dan rekomendasi aksi penutup sesuai target CTA.`
-    });
-  }
-}
 
 // Sort templates by number
 INITIAL_PROMPT_TEMPLATES.sort((a, b) => a.number - b.number);

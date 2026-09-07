@@ -16,7 +16,6 @@ import {
   Trash2,
   ExternalLink,
   Layers,
-  RefreshCw,
   Search,
   Sparkles,
   X
@@ -28,7 +27,6 @@ const ProjectManagerInner: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   // Form fields
   const [formData, setFormData] = useState({
@@ -44,32 +42,16 @@ const ProjectManagerInner: React.FC = () => {
   });
 
   useEffect(() => {
-    loadData(false);
+    loadData();
     const unsubscribe = store.subscribe(() => {
-      loadData(false);
+      loadData();
     });
     return () => unsubscribe();
   }, []);
 
-  const loadData = async (fetchCloud = false) => {
+  const loadData = () => {
     setProjects(store.getProjects());
     setActiveProject(store.getActiveProject());
-
-    if (fetchCloud) {
-      setIsLoading(true);
-      await store.fetchProjectsFromSupabase();
-      setProjects(store.getProjects());
-      setActiveProject(store.getActiveProject());
-      setIsLoading(false);
-    }
-  };
-
-  const handleRefreshCloud = async () => {
-    setIsLoading(true);
-    await store.fetchProjectsFromSupabase();
-    setProjects(store.getProjects());
-    setActiveProject(store.getActiveProject());
-    setIsLoading(false);
   };
 
   const openCreateModal = () => {
@@ -125,7 +107,7 @@ const ProjectManagerInner: React.FC = () => {
     e.stopPropagation();
     if (confirm('Hapus project ini beserta data kalender terkait?')) {
       store.deleteProject(id);
-      loadData(false);
+      loadData();
     }
   };
 
@@ -161,15 +143,6 @@ const ProjectManagerInner: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleRefreshCloud}
-            disabled={isLoading}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 text-emerald-600 ${isLoading ? 'animate-spin' : ''}`} />
-            <span>{isLoading ? 'Syncing...' : 'Sync Cloud'}</span>
-          </button>
-
           <button
             onClick={openCreateModal}
             className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700"

@@ -46,7 +46,7 @@ const PromptBuilderStudioInner: React.FC<{ initialArticleId?: string }> = ({ ini
     const curCal = store.getCalendar(p?.id);
     return curCal[0]?.id || '';
   });
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('tpl-04');
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('tpl-01');
   
   // Search & Filter for Left Column Templates
   const [templateSearch, setTemplateSearch] = useState('');

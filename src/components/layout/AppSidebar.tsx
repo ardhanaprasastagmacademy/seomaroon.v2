@@ -7,8 +7,7 @@ import {
   Layers,
   FileCode,
   Boxes,
-  History,
-  ExternalLink
+  History
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -74,14 +73,9 @@ export const AppSidebar: React.FC<SidebarProps> = ({ currentPath = '' }) => {
           Tersinkronisasi otomatis dengan database Supabase Cloud.
         </p>
         <div className="mt-2.5 flex items-center justify-between border-t border-slate-200/60 pt-2 dark:border-slate-800">
-          <a
-            href="/"
-            target="_blank"
-            className="flex items-center gap-1 text-[10px] font-medium text-slate-500 hover:text-blue-600 dark:text-slate-400"
-          >
-            <span>Landing Page</span>
-            <ExternalLink className="h-2.5 w-2.5" />
-          </a>
+          <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
+            Status Database
+          </span>
           <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
             Cloud Connected
           </span>

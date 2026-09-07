@@ -6,6 +6,7 @@ export type ExportFormat = 'md' | 'json_raw' | 'json_structured' | 'yaml' | 'txt
 
 export interface Project {
   id: string;
+  user_id?: string;
   name: string;
   website_url?: string;
   business_name?: string;
@@ -22,6 +23,7 @@ export interface Project {
 export interface ContentArticle {
   id: string;
   project_id: string;
+  user_id?: string;
   day: string;
   time_slot?: string;
   content_cluster: string;
@@ -67,6 +69,7 @@ export interface PromptTemplate {
 
 export interface GeneratedPrompt {
   id: string;
+  user_id?: string;
   project_id: string;
   content_id?: string;
   template_id: string;

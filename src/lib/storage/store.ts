@@ -1,14 +1,14 @@
 import type { Project, ContentArticle, PromptTemplate, GeneratedPrompt, PromptDraft } from '@/types';
 import { INITIAL_PROJECT, INITIAL_CONTENT_CALENDAR } from './initial-data';
 import { INITIAL_PROMPT_TEMPLATES } from '../prompt-engine/template-library';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { supabase, authService } from '../auth/supabase-auth';
-import type { SupabaseClient } from '@supabase/supabase-js';
 
 const STORAGE_KEYS = {
   PROJECTS: 'seo_app_projects_v1',
   ACTIVE_PROJECT_ID: 'seo_app_active_project_id_v1',
   CALENDAR: 'seo_app_calendar_v1',
-  TEMPLATES: 'seo_app_templates_v1',
+  TEMPLATES: 'seo_app_templates_v2',
   GENERATED_PROMPTS: 'seo_app_generated_prompts_v1',
   DRAFTS: 'seo_app_drafts_v1',
   SUPABASE_CONFIG: 'seo_app_supabase_config_v1',
@@ -50,9 +50,23 @@ class AppStore {
   private supabaseClient: SupabaseClient | null = supabase;
   private listeners: Set<() => void> = new Set();
   private isInitialized = false;
+  private currentUserId: string | null = null;
+  private currentUserEmail: string | null = null;
+  private isAuthSubscribed = false;
 
   constructor() {
     this.init();
+  }
+
+  private getStorageKey(type: 'PROJECTS' | 'ACTIVE_PROJECT_ID' | 'CALENDAR' | 'GENERATED_PROMPTS' | 'DRAFTS'): string {
+    const userScope = this.currentUserId ? `_${this.currentUserId}` : '_guest';
+    switch (type) {
+      case 'PROJECTS': return `seo_app_projects_v2${userScope}`;
+      case 'ACTIVE_PROJECT_ID': return `seo_app_active_project_id_v2${userScope}`;
+      case 'CALENDAR': return `seo_app_calendar_v2${userScope}`;
+      case 'GENERATED_PROMPTS': return `seo_app_generated_prompts_v2${userScope}`;
+      case 'DRAFTS': return `seo_app_drafts_v2${userScope}`;
+    }
   }
 
   private init() {
@@ -69,9 +83,55 @@ class AppStore {
       return;
     }
 
+    if (!this.isAuthSubscribed) {
+      this.isAuthSubscribed = true;
+      const initialUser = authService.getUser();
+      if (initialUser) {
+        this.currentUserId = initialUser.id;
+        this.currentUserEmail = initialUser.email || null;
+      }
+
+      authService.subscribe((state) => {
+        const newUserId = state.user?.id || null;
+        const newEmail = state.user?.email || null;
+        if (newUserId !== this.currentUserId) {
+          this.handleUserChanged(newUserId, newEmail);
+        }
+      });
+    }
+
+    this.loadDataForCurrentUser();
+    this.isInitialized = true;
+  }
+
+  private async handleUserChanged(newUserId: string | null, newEmail: string | null) {
+    this.currentUserId = newUserId;
+    this.currentUserEmail = newEmail;
+    this.loadDataForCurrentUser();
+    this.notify();
+
+    // If an authenticated user logs in, immediately pull their isolated projects from Supabase
+    if (newUserId) {
+      await this.fetchProjectsFromSupabase(true);
+      if (this.activeProjectId) {
+        await this.fetchCalendarFromSupabase(this.activeProjectId, true);
+      }
+    }
+  }
+
+  private loadDataForCurrentUser() {
+    if (typeof window === 'undefined') return;
+
     try {
       // 1. Load Projects
-      const savedProjects = localStorage.getItem(STORAGE_KEYS.PROJECTS);
+      const keyProjects = this.getStorageKey('PROJECTS');
+      let savedProjects = localStorage.getItem(keyProjects);
+
+      // Fallback only for guest mode from legacy store
+      if (!this.currentUserId && savedProjects === null) {
+        savedProjects = localStorage.getItem(STORAGE_KEYS.PROJECTS);
+      }
+
       if (savedProjects !== null) {
         try {
           const parsed = JSON.parse(savedProjects);
@@ -80,104 +140,137 @@ class AppStore {
           this.projects = [];
         }
       } else {
-        this.projects = [{ ...INITIAL_PROJECT }];
-        this.saveProjectsToStorage();
+        if (!this.currentUserId) {
+          this.projects = [{ ...INITIAL_PROJECT }];
+          this.saveProjectsToStorage();
+        } else {
+          this.projects = [];
+        }
       }
 
       // 2. Load Active Project ID
-      const savedActiveId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROJECT_ID);
+      const keyActiveId = this.getStorageKey('ACTIVE_PROJECT_ID');
+      const savedActiveId = localStorage.getItem(keyActiveId);
       if (savedActiveId && this.projects.some(p => p.id === savedActiveId)) {
         this.activeProjectId = savedActiveId;
       } else {
         this.activeProjectId = this.projects[0]?.id || '';
-        if (typeof window !== 'undefined') {
-          localStorage.setItem(STORAGE_KEYS.ACTIVE_PROJECT_ID, this.activeProjectId);
+        if (this.activeProjectId) {
+          localStorage.setItem(keyActiveId, this.activeProjectId);
         }
       }
 
       // 3. Load Calendar
-      const savedCalendar = localStorage.getItem(STORAGE_KEYS.CALENDAR);
+      const keyCalendar = this.getStorageKey('CALENDAR');
+      let savedCalendar = localStorage.getItem(keyCalendar);
+      if (!this.currentUserId && savedCalendar === null) {
+        savedCalendar = localStorage.getItem(STORAGE_KEYS.CALENDAR);
+      }
+
       if (savedCalendar !== null) {
         try {
           const parsed = JSON.parse(savedCalendar);
           this.calendar = Array.isArray(parsed)
-            ? parsed.map((art: any) => {
-                // Ensure initial sample articles (art-001 to art-090) always belong to INITIAL_PROJECT
-                const isSampleArticle = typeof art?.id === 'string' && /^art-\d+$/.test(art.id);
-                return {
-                  id: art?.id || generateUUID(),
-                  project_id: isSampleArticle ? INITIAL_PROJECT.id : (art?.project_id || INITIAL_PROJECT.id),
-                  day: String(art?.day || 'Hari 01'),
-                  time_slot: String(art?.time_slot || 'Pagi'),
-                  content_cluster: String(art?.content_cluster || 'Umum'),
-                  title: String(art?.title || 'Judul Konten'),
-                  primary_keyword: String(art?.primary_keyword || ''),
-                  secondary_keywords: Array.isArray(art?.secondary_keywords)
-                    ? art.secondary_keywords
-                    : String(art?.secondary_keywords || '').split(',').map((s: string) => s.trim()).filter(Boolean),
-                  search_volume: Number(art?.search_volume || 0),
-                  competition: String(art?.competition || 'Low') as any,
-                  journey_stage: String(art?.journey_stage || 'TOFU') as any,
-                  content_format: String(art?.content_format || 'Panduan Lengkap'),
-                  cta: String(art?.cta || 'Konsultasi Sekarang'),
-                  slug: String(art?.slug || '/blog/artikel'),
-                  status: art?.status || 'Draft',
-                  created_at: art?.created_at || new Date().toISOString(),
-                  updated_at: art?.updated_at || new Date().toISOString(),
-                };
-              })
+            ? parsed.map((art: any) => ({
+                id: art?.id || generateUUID(),
+                project_id: art?.project_id || (this.projects[0]?.id || INITIAL_PROJECT.id),
+                day: String(art?.day || 'Hari 01'),
+                time_slot: String(art?.time_slot || 'Pagi'),
+                content_cluster: String(art?.content_cluster || 'Umum'),
+                title: String(art?.title || 'Judul Konten'),
+                primary_keyword: String(art?.primary_keyword || ''),
+                secondary_keywords: Array.isArray(art?.secondary_keywords)
+                  ? art.secondary_keywords.join(', ')
+                  : String(art?.secondary_keywords || ''),
+                search_volume: String(art?.search_volume || '> 1,000'),
+                competition: String(art?.competition || 'Low') as any,
+                journey_stage: String(art?.journey_stage || 'TOFU') as any,
+                content_format: String(art?.content_format || 'Panduan Lengkap'),
+                cta: String(art?.cta || 'Konsultasi Sekarang'),
+                slug: String(art?.slug || '/blog/artikel'),
+                status: art?.status || 'Draft',
+                created_at: art?.created_at || new Date().toISOString(),
+                updated_at: art?.updated_at || new Date().toISOString(),
+              }))
             : [];
         } catch {
           this.calendar = [];
         }
       } else {
-        this.calendar = [...INITIAL_CONTENT_CALENDAR];
-        this.saveCalendarToStorage();
+        if (!this.currentUserId) {
+          this.calendar = [...INITIAL_CONTENT_CALENDAR];
+          this.saveCalendarToStorage();
+        } else {
+          this.calendar = [];
+        }
       }
 
-      // 4. Load Templates
+      // 4. Load Templates (Master Templates)
       const savedTemplates = localStorage.getItem(STORAGE_KEYS.TEMPLATES);
       if (savedTemplates) {
-        this.templates = JSON.parse(savedTemplates);
+        try {
+          const parsed = JSON.parse(savedTemplates);
+          if (Array.isArray(parsed) && (parsed.length > 6 || parsed.some((t: any) => t.id === 'tpl-40' || t.id === 'tpl-38') || !parsed.some((t: any) => t.id === 'tpl-01'))) {
+            this.templates = [...INITIAL_PROMPT_TEMPLATES];
+            this.saveTemplatesToStorage();
+          } else {
+            this.templates = parsed;
+          }
+        } catch {
+          this.templates = [...INITIAL_PROMPT_TEMPLATES];
+          this.saveTemplatesToStorage();
+        }
       } else {
         this.templates = [...INITIAL_PROMPT_TEMPLATES];
         this.saveTemplatesToStorage();
       }
 
       // 5. Load Generated Prompts
-      const savedPrompts = localStorage.getItem(STORAGE_KEYS.GENERATED_PROMPTS);
+      const keyPrompts = this.getStorageKey('GENERATED_PROMPTS');
+      const savedPrompts = localStorage.getItem(keyPrompts);
       if (savedPrompts) {
-        this.generatedPrompts = JSON.parse(savedPrompts);
+        try {
+          this.generatedPrompts = JSON.parse(savedPrompts);
+        } catch {
+          this.generatedPrompts = [];
+        }
       } else {
         this.generatedPrompts = [];
-        this.saveGeneratedPromptsToStorage();
       }
 
       // 6. Load Drafts
-      const savedDrafts = localStorage.getItem(STORAGE_KEYS.DRAFTS);
+      const keyDrafts = this.getStorageKey('DRAFTS');
+      const savedDrafts = localStorage.getItem(keyDrafts);
       if (savedDrafts) {
-        this.drafts = JSON.parse(savedDrafts);
+        try {
+          this.drafts = JSON.parse(savedDrafts);
+        } catch {
+          this.drafts = {};
+        }
+      } else {
+        this.drafts = {};
       }
-
-      // Cloud sync is triggered manually via "Sync Cloud" button only
-      // No automatic network requests on page load for instant responsiveness
     } catch (e) {
-      console.error('Failed to initialize local storage:', e);
+      console.error('Failed to initialize local storage for user:', e);
     }
-
-    this.isInitialized = true;
   }
 
   // --- Persistence Helpers ---
   private saveProjectsToStorage() {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(this.projects));
+      localStorage.setItem(this.getStorageKey('PROJECTS'), JSON.stringify(this.projects));
+    }
+  }
+
+  private saveActiveProjectIdToStorage() {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.getStorageKey('ACTIVE_PROJECT_ID'), this.activeProjectId);
     }
   }
 
   private saveCalendarToStorage() {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEYS.CALENDAR, JSON.stringify(this.calendar));
+      localStorage.setItem(this.getStorageKey('CALENDAR'), JSON.stringify(this.calendar));
     }
   }
 
@@ -189,13 +282,13 @@ class AppStore {
 
   private saveGeneratedPromptsToStorage() {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEYS.GENERATED_PROMPTS, JSON.stringify(this.generatedPrompts));
+      localStorage.setItem(this.getStorageKey('GENERATED_PROMPTS'), JSON.stringify(this.generatedPrompts));
     }
   }
 
   private saveDraftsToStorage() {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEYS.DRAFTS, JSON.stringify(this.drafts));
+      localStorage.setItem(this.getStorageKey('DRAFTS'), JSON.stringify(this.drafts));
     }
   }
 
@@ -212,6 +305,22 @@ class AppStore {
   public subscribe(listener: () => void): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
+  }
+
+  public getCurrentUser() {
+    return authService.getUser();
+  }
+
+  public getCurrentUserId(): string | null {
+    return this.currentUserId;
+  }
+
+  public getCurrentUserEmail(): string | null {
+    return this.currentUserEmail;
+  }
+
+  public isAuthenticated(): boolean {
+    return !!this.currentUserId;
   }
 
   private isFetchingProjects = false;
@@ -231,6 +340,11 @@ class AppStore {
     this.init();
     if (!this.supabaseClient) return this.getProjects();
 
+    // STRICT USER ISOLATION: Guest users should NEVER query or view other users' live projects
+    if (!this.currentUserId) {
+      return this.getProjects();
+    }
+
     const now = Date.now();
     if (!force && (this.isFetchingProjects || (now - this.lastProjectsFetch < 30000))) {
       return this.getProjects();
@@ -239,9 +353,11 @@ class AppStore {
     this.isFetchingProjects = true;
 
     try {
+      // Query ONLY projects that belong to the logged-in user
       const { data, error } = await this.supabaseClient
         .from('projects')
         .select('*')
+        .eq('user_id', this.currentUserId)
         .order('created_at', { ascending: false });
 
       this.lastProjectsFetch = Date.now();
@@ -251,9 +367,10 @@ class AppStore {
         return this.getProjects();
       }
 
-      if (data && Array.isArray(data) && data.length > 0) {
+      if (data && Array.isArray(data)) {
         const fetched: Project[] = data.map((p: any) => ({
           id: String(p.id),
+          user_id: p.user_id ? String(p.user_id) : this.currentUserId || undefined,
           name: String(p.name || 'Project'),
           website_url: String(p.website_url || ''),
           business_name: String(p.business_name || p.name || ''),
@@ -270,6 +387,10 @@ class AppStore {
         const isChanged = JSON.stringify(this.projects) !== JSON.stringify(fetched);
         if (isChanged) {
           this.projects = fetched;
+          if (!this.projects.some(p => p.id === this.activeProjectId)) {
+            this.activeProjectId = this.projects[0]?.id || '';
+            this.saveActiveProjectIdToStorage();
+          }
           this.saveProjectsToStorage();
           this.notify();
         }
@@ -294,9 +415,7 @@ class AppStore {
     this.init();
     if (this.projects.some(p => p.id === id)) {
       this.activeProjectId = id;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEYS.ACTIVE_PROJECT_ID, id);
-      }
+      this.saveActiveProjectIdToStorage();
       this.notify();
     }
   }
@@ -310,6 +429,7 @@ class AppStore {
     const projectId = generateUUID();
     const newProject: Project = {
       id: projectId,
+      user_id: this.currentUserId || undefined,
       name: projectData.name || 'Project Baru',
       website_url: projectData.website_url || '',
       business_name: projectData.business_name || '',
@@ -326,12 +446,10 @@ class AppStore {
     this.projects.push(newProject);
     this.activeProjectId = newProject.id;
     this.saveProjectsToStorage();
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEYS.ACTIVE_PROJECT_ID, this.activeProjectId);
-    }
+    this.saveActiveProjectIdToStorage();
     this.notify();
 
-    // Auto-sync Project to Supabase
+    // Auto-sync Project to Supabase with user_id
     this.syncProjectToSupabaseAsync(newProject);
 
     return newProject;
@@ -362,9 +480,7 @@ class AppStore {
     this.projects = this.projects.filter(p => p.id !== id);
     if (this.activeProjectId === id) {
       this.activeProjectId = this.projects[0]?.id || '';
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEYS.ACTIVE_PROJECT_ID, this.activeProjectId);
-      }
+      this.saveActiveProjectIdToStorage();
     }
 
     // Clean up calendar articles for this project
@@ -380,19 +496,19 @@ class AppStore {
 
     // Sync delete to Supabase if client is ready
     if (this.supabaseClient && isValidUUID(id)) {
-      this.supabaseClient
-        .from('content_calendar')
-        .delete()
-        .eq('project_id', id)
-        .then(() => {})
-        .catch(console.error);
+      Promise.resolve(
+        this.supabaseClient
+          .from('content_calendar')
+          .delete()
+          .eq('project_id', id)
+      ).catch(console.error);
 
-      this.supabaseClient
-        .from('projects')
-        .delete()
-        .eq('id', id)
-        .then(() => {})
-        .catch(console.error);
+      Promise.resolve(
+        this.supabaseClient
+          .from('projects')
+          .delete()
+          .eq('id', id)
+      ).catch(console.error);
     }
   }
 
@@ -420,6 +536,11 @@ class AppStore {
       return this.getCalendar(targetProjId);
     }
 
+    // Unauthenticated user uses local storage calendar only
+    if (!this.currentUserId) {
+      return this.getCalendar(targetProjId);
+    }
+
     const now = Date.now();
     if (!force && (this.isFetchingCalendar || (now - this.lastCalendarFetch < 30000))) {
       return this.getCalendar(targetProjId);
@@ -428,9 +549,16 @@ class AppStore {
     this.isFetchingCalendar = true;
 
     try {
+      // ONLY fetch calendar articles belonging to this user's projects!
+      const validProjectIds = this.projects.map(p => p.id).filter(isValidUUID);
+      if (validProjectIds.length === 0) {
+        return this.getCalendar(targetProjId);
+      }
+
       const { data, error } = await this.supabaseClient
         .from('content_calendar')
         .select('*')
+        .in('project_id', validProjectIds)
         .order('created_at', { ascending: true });
 
       this.lastCalendarFetch = Date.now();
@@ -443,7 +571,8 @@ class AppStore {
       if (data && Array.isArray(data)) {
         const fetched: ContentArticle[] = data.map((row: any) => ({
           id: String(row.id),
-          project_id: String(row.project_id || INITIAL_PROJECT.id),
+          project_id: String(row.project_id || (this.projects[0]?.id || INITIAL_PROJECT.id)),
+          user_id: row.user_id ? String(row.user_id) : this.currentUserId || undefined,
           day: String(row.day || 'Hari 01'),
           time_slot: String(row.time_slot || '09:00'),
           content_cluster: String(row.content_cluster || 'Umum'),
@@ -538,15 +667,15 @@ class AppStore {
 
     // Sync update to Supabase
     if (this.supabaseClient && isValidUUID(id)) {
-      this.supabaseClient
-        .from('content_calendar')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id)
-        .then(() => {})
-        .catch(console.error);
+      Promise.resolve(
+        this.supabaseClient
+          .from('content_calendar')
+          .update({
+            ...updates,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', id)
+      ).catch(console.error);
     }
 
     return this.calendar[idx]!;
@@ -560,12 +689,12 @@ class AppStore {
 
     // Sync delete to Supabase
     if (this.supabaseClient && isValidUUID(id)) {
-      this.supabaseClient
-        .from('content_calendar')
-        .delete()
-        .eq('id', id)
-        .then(() => {})
-        .catch(console.error);
+      Promise.resolve(
+        this.supabaseClient
+          .from('content_calendar')
+          .delete()
+          .eq('id', id)
+      ).catch(console.error);
     }
   }
 
@@ -578,12 +707,12 @@ class AppStore {
 
     // Sync clear to Supabase
     if (this.supabaseClient && isValidUUID(targetProjId)) {
-      this.supabaseClient
-        .from('content_calendar')
-        .delete()
-        .eq('project_id', targetProjId)
-        .then(() => {})
-        .catch(console.error);
+      Promise.resolve(
+        this.supabaseClient
+          .from('content_calendar')
+          .delete()
+          .eq('project_id', targetProjId)
+      ).catch(console.error);
     }
   }
 
@@ -608,10 +737,10 @@ class AppStore {
           id: String(t.id || `tpl-${t.number}`),
           number: Number(t.number),
           name: String(t.name),
-          category: String(t.category || 'General'),
+          category: (t.category || 'SEO') as PromptTemplate['category'],
           description: String(t.description || ''),
           template_markdown: String(t.template_markdown || ''),
-          input_schema: t.input_schema || {},
+          input_schema: Array.isArray(t.input_schema) ? t.input_schema : [],
           version: String(t.version || '1.0'),
           is_active: t.is_active ?? true,
           created_at: t.created_at || new Date().toISOString(),
@@ -637,15 +766,15 @@ class AppStore {
 
   public createTemplate(templateData: Partial<PromptTemplate>): PromptTemplate {
     this.init();
-    const nextNumber = this.templates.length > 0 ? Math.max(...this.templates.map(t => t.number)) + 1 : 4;
+    const nextNumber = this.templates.length > 0 ? Math.max(...this.templates.map(t => t.number)) + 1 : 1;
     const newTemplate: PromptTemplate = {
       id: `tpl-${String(nextNumber).padStart(2, '0')}`,
       number: nextNumber,
       name: templateData.name || `Custom Template #${nextNumber}`,
-      category: templateData.category || 'SEO Strategy',
+      category: templateData.category || 'SEO',
       description: templateData.description || 'Template prompt kustom.',
       template_markdown: templateData.template_markdown || '',
-      input_schema: templateData.input_schema || {},
+      input_schema: Array.isArray(templateData.input_schema) ? templateData.input_schema : [],
       version: '1.0',
       is_active: true,
       created_at: new Date().toISOString(),
@@ -658,20 +787,20 @@ class AppStore {
 
     // Auto-sync template to Supabase
     if (this.supabaseClient) {
-      this.supabaseClient
-        .from('prompt_templates')
-        .upsert([{
-          number: newTemplate.number,
-          name: newTemplate.name,
-          category: newTemplate.category,
-          description: newTemplate.description,
-          template_markdown: newTemplate.template_markdown,
-          input_schema: newTemplate.input_schema,
-          version: newTemplate.version,
-          is_active: newTemplate.is_active,
-        }], { onConflict: 'number' } as any)
-        .then(() => {})
-        .catch(console.error);
+      Promise.resolve(
+        this.supabaseClient
+          .from('prompt_templates')
+          .upsert([{
+            number: newTemplate.number,
+            name: newTemplate.name,
+            category: newTemplate.category,
+            description: newTemplate.description,
+            template_markdown: newTemplate.template_markdown,
+            input_schema: newTemplate.input_schema,
+            version: newTemplate.version,
+            is_active: newTemplate.is_active,
+          }], { onConflict: 'number' } as any)
+      ).catch(console.error);
     }
 
     return newTemplate;
@@ -687,11 +816,13 @@ class AppStore {
   public async fetchGeneratedPromptsFromSupabase(): Promise<GeneratedPrompt[]> {
     this.init();
     if (!this.supabaseClient) return this.getGeneratedPrompts();
+    if (!this.currentUserId) return this.getGeneratedPrompts();
 
     try {
       const { data, error } = await this.supabaseClient
         .from('generated_prompts')
         .select('*')
+        .eq('user_id', this.currentUserId)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -702,10 +833,11 @@ class AppStore {
       if (data && Array.isArray(data)) {
         const fetched: GeneratedPrompt[] = data.map((p: any) => ({
           id: String(p.id),
+          user_id: p.user_id ? String(p.user_id) : this.currentUserId || undefined,
           project_id: String(p.project_id || ''),
           content_id: p.content_id ? String(p.content_id) : undefined,
-          template_id: p.template_id ? String(p.template_id) : undefined,
-          template_number: Number(p.template_number || 4),
+          template_id: String(p.template_id || 'tpl-01'),
+          template_number: Number(p.template_number || 1),
           template_name: String(p.template_name || 'SEO Prompt'),
           template_version: String(p.template_version || '1.0'),
           article_title: String(p.article_title || 'Untitled Article'),
@@ -735,6 +867,7 @@ class AppStore {
     const newPrompt: GeneratedPrompt = {
       ...prompt,
       id: promptId,
+      user_id: this.currentUserId || undefined,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -761,12 +894,12 @@ class AppStore {
     this.notify();
 
     if (this.supabaseClient && isValidUUID(id)) {
-      this.supabaseClient
-        .from('generated_prompts')
-        .delete()
-        .eq('id', id)
-        .then(() => {})
-        .catch(console.error);
+      Promise.resolve(
+        this.supabaseClient
+          .from('generated_prompts')
+          .delete()
+          .eq('id', id)
+      ).catch(console.error);
     }
   }
 
@@ -1079,9 +1212,7 @@ class AppStore {
     this.drafts = {};
     
     this.saveProjectsToStorage();
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEYS.ACTIVE_PROJECT_ID, this.activeProjectId);
-    }
+    this.saveActiveProjectIdToStorage();
     this.saveCalendarToStorage();
     this.saveTemplatesToStorage();
     this.saveGeneratedPromptsToStorage();

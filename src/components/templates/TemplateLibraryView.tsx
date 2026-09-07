@@ -14,8 +14,7 @@ import {
   ExternalLink,
   Code2,
   X,
-  FileText,
-  RefreshCw
+  FileText
 } from 'lucide-react';
 
 const TemplateLibraryViewInner: React.FC = () => {
@@ -24,7 +23,6 @@ const TemplateLibraryViewInner: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedTemplatePreview, setSelectedTemplatePreview] = useState<PromptTemplate | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   
   // Custom Template Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,30 +44,6 @@ const TemplateLibraryViewInner: React.FC = () => {
     });
     return () => unsubscribe();
   }, []);
-
-  const loadTemplates = async (fetchCloud = false) => {
-    const list = store.getTemplates();
-    setTemplates(list);
-    setCustomNumber(list.length + 1);
-
-    if (fetchCloud) {
-      setIsLoading(true);
-      await store.fetchTemplatesFromSupabase();
-      const updated = store.getTemplates();
-      setTemplates(updated);
-      setCustomNumber(updated.length + 1);
-      setIsLoading(false);
-    }
-  };
-
-  const handleRefreshCloud = async () => {
-    setIsLoading(true);
-    await store.fetchTemplatesFromSupabase();
-    const updated = store.getTemplates();
-    setTemplates(updated);
-    setCustomNumber(updated.length + 1);
-    setIsLoading(false);
-  };
 
   const filteredTemplates = templates.filter((tpl) => {
     if (!tpl) return false;
@@ -130,20 +104,11 @@ const TemplateLibraryViewInner: React.FC = () => {
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            40+ Master Template SEO, AEO (Perplexity/Copilot), dan GEO (AI Overviews) yang tersinkronisasi dengan database Supabase.
+            6 Master Template SEO, AEO (Perplexity/ChatGPT), dan GEO (AI Overviews) terpadu dengan standar industri internasional.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleRefreshCloud}
-            disabled={isLoading}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 text-emerald-600 ${isLoading ? 'animate-spin' : ''}`} />
-            <span>{isLoading ? 'Syncing...' : 'Sync Cloud'}</span>
-          </button>
-
           <button
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700"
@@ -160,7 +125,7 @@ const TemplateLibraryViewInner: React.FC = () => {
           <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
           <input
             type="text"
-            placeholder="Cari template berdasarkan nama, nomor (#01 - #40), atau fungsi..."
+            placeholder="Cari template berdasarkan nama, nomor (#01 - #06), atau fungsi..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-2xl border border-slate-200 bg-white pl-10 pr-4 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none dark:border-slate-800 dark:bg-slate-900 dark:text-white"
@@ -168,7 +133,7 @@ const TemplateLibraryViewInner: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {['ALL', 'SEO', 'AEO', 'GEO', 'Commercial', 'Copywriting'].map((cat) => (
+          {['ALL', 'SEO', 'AEO/GEO', 'E-Commerce', 'Local SEO'].map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
@@ -216,10 +181,10 @@ const TemplateLibraryViewInner: React.FC = () => {
                 <div className="mt-4 flex flex-wrap gap-1">
                   {placeholders.slice(0, 3).map((ph) => (
                     <span
-                      key={ph.key}
+                      key={ph}
                       className="rounded bg-slate-50 px-1.5 py-0.5 font-mono text-[10px] text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700"
                     >
-                      {'{' + ph.key + '}'}
+                      {'{' + ph + '}'}
                     </span>
                   ))}
                   {placeholders.length > 3 && (
