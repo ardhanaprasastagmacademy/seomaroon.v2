@@ -21,6 +21,7 @@ import {
   MapPin,
   Layers,
   MessageSquare,
+  Volume2,
   User,
   LogIn,
   LogOut,
@@ -104,13 +105,35 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
       }
     };
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMobileNavOpen(false);
+        setIsProjectDropdownOpen(false);
+        setIsUserMenuOpen(false);
+        setIsCreateModalOpen(false);
+      }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
       unsubscribeStore();
       unsubscribeAuth();
       document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  useEffect(() => {
+    if (isMobileNavOpen || isCreateModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileNavOpen, isCreateModalOpen]);
 
   const loadData = () => {
     setProjects(store.getProjects());
@@ -380,127 +403,19 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
             </a>
           )}
 
-          {/* Mobile Menu Hamburger (App Layout) */}
-          <button
-            onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-            aria-label="Toggle Navigation Menu"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-850 dark:text-slate-300 md:hidden"
-          >
-            {isMobileNavOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
         </div>
       </header>
 
-      {/* Mobile App Navigation Drawer */}
-      {isMobileNavOpen && (
-        <div className="border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 md:hidden animate-in slide-in-from-top-2 duration-200">
-          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1 pb-2">
-            Menu Navigasi Aplikasi
-          </div>
-          <div className="grid grid-cols-2 gap-1.5 text-xs font-semibold">
-            <a
-              href="/dashboard"
-              onClick={() => setIsMobileNavOpen(false)}
-              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
-                activePage === '/dashboard' || activePage === ''
-                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
-                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
-              }`}
-            >
-              <LayoutDashboard className="h-4 w-4 text-blue-600" />
-              <span>Dashboard</span>
-            </a>
-            <a
-              href="/projects"
-              onClick={() => setIsMobileNavOpen(false)}
-              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
-                activePage === '/projects'
-                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
-                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
-              }`}
-            >
-              <FolderKanban className="h-4 w-4 text-amber-500" />
-              <span>Projects</span>
-            </a>
-            <a
-              href="/calendar"
-              onClick={() => setIsMobileNavOpen(false)}
-              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
-                activePage === '/calendar'
-                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
-                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
-              }`}
-            >
-              <CalendarDays className="h-4 w-4 text-emerald-600" />
-              <span>Kalender</span>
-            </a>
-            <a
-              href="/prompt-builder"
-              onClick={() => setIsMobileNavOpen(false)}
-              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
-                activePage === '/prompt-builder'
-                  ? 'bg-blue-600 text-white font-bold shadow-sm'
-                  : 'bg-blue-50/80 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
-              }`}
-            >
-              <Sparkles className="h-4 w-4 text-blue-600" />
-              <span>Prompt Studio</span>
-            </a>
-            <a
-              href="/templates-manager"
-              onClick={() => setIsMobileNavOpen(false)}
-              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
-                activePage === '/templates-manager'
-                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
-                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
-              }`}
-            >
-              <Layers className="h-4 w-4 text-purple-600" />
-              <span>Templates</span>
-            </a>
-            <a
-              href="/formatter"
-              onClick={() => setIsMobileNavOpen(false)}
-              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
-                activePage === '/formatter'
-                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
-                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
-              }`}
-            >
-              <FileCode className="h-4 w-4 text-indigo-600" />
-              <span>Formatter</span>
-            </a>
-            <a
-              href="/bulk"
-              onClick={() => setIsMobileNavOpen(false)}
-              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
-                activePage === '/bulk'
-                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
-                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
-              }`}
-            >
-              <Boxes className="h-4 w-4 text-rose-600" />
-              <span>Bulk Studio</span>
-            </a>
-            <a
-              href="/history"
-              onClick={() => setIsMobileNavOpen(false)}
-              className={`flex items-center gap-2 rounded-xl p-2.5 transition-colors ${
-                activePage === '/history'
-                  ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/60 dark:text-blue-300'
-                  : 'hover:bg-slate-100 text-slate-700 dark:hover:bg-slate-800 dark:text-slate-200'
-              }`}
-            >
-              <History className="h-4 w-4 text-slate-500" />
-              <span>Histori Prompt</span>
-            </a>
-          </div>
-        </div>
-      )}
-
       {/* Create Project Modal */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 sm:items-center sm:p-4">
+        <div 
+          className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 sm:items-center sm:p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsCreateModalOpen(false);
+            }
+          }}
+        >
           <div className="w-full max-w-lg overflow-hidden rounded-t-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:rounded-2xl">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 px-6 py-4 dark:border-slate-800 dark:bg-slate-850/50">
@@ -666,10 +581,10 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
           />
 
           {/* Drawer Panel */}
-          <aside className="fixed inset-y-0 left-0 z-50 flex w-[85vw] max-w-xs sm:w-80 flex-col justify-between border-r border-slate-200 bg-white px-4 py-4 shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in slide-in-from-left duration-250">
-            <div className="flex flex-col overflow-y-auto">
+          <aside className="fixed inset-y-0 left-0 z-50 flex h-full max-h-screen w-[85vw] max-w-xs sm:w-80 flex-col justify-between border-r border-slate-200 bg-white px-4 py-4 shadow-2xl animate-in slide-in-from-left duration-250">
+            <div className="flex flex-1 min-h-0 flex-col overflow-y-auto pr-1">
               {/* Drawer Top Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                 <a 
                   href="/dashboard" 
                   onClick={() => setIsMobileNavOpen(false)}
@@ -679,45 +594,45 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
                     <Sparkles className="h-4 w-4" />
                   </div>
                   <div>
-                    <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400">SEO PROMPT</span>
-                    <span className="ml-1 text-sm font-semibold text-slate-800 dark:text-slate-200">STUDIO</span>
+                    <span className="text-sm font-extrabold text-blue-600">SEO PROMPT</span>
+                    <span className="ml-1 text-sm font-semibold text-slate-800">STUDIO</span>
                   </div>
                 </a>
                 <button
                   type="button"
                   onClick={() => setIsMobileNavOpen(false)}
                   aria-label="Tutup Menu"
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors"
+                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               {/* Active Project Card */}
-              <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-800/80">
+              <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">Project Aktif</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Project Aktif</span>
                   <a
                     href="/projects"
                     onClick={() => setIsMobileNavOpen(false)}
-                    className="text-[10px] font-semibold text-blue-600 hover:underline dark:text-blue-400"
+                    className="text-[10px] font-semibold text-blue-600 hover:underline"
                   >
                     Kelola Semua
                   </a>
                 </div>
-                <p className="mt-1 text-xs font-bold text-slate-900 dark:text-white truncate">
+                <p className="mt-1 text-xs font-bold text-slate-900 truncate">
                   {activeProject?.name || 'Belum Ada Project'}
                 </p>
-                <div className="mt-0.5 flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400">
+                <div className="mt-0.5 flex items-center gap-1.5 text-[10px] text-slate-500">
                   <span className="truncate">{activeProject?.industry || 'General SEO'}</span>
                   <span>•</span>
-                  <span className="text-blue-600 dark:text-blue-400 font-semibold">{calendar.length} Artikel</span>
+                  <span className="text-blue-600 font-semibold">{calendar.length} Artikel</span>
                 </div>
               </div>
 
               {/* Main Nav Items */}
               <div className="mt-4 space-y-1">
-                <div className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
+                <div className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   Menu Aplikasi
                 </div>
                 {navItems.map((item) => {
@@ -733,16 +648,16 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
                         isActive
                           ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
                           : item.highlight
-                          ? 'text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/50'
-                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white'
+                          ? 'text-blue-600 hover:bg-blue-50'
+                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                       }`}
                     >
                       <Icon className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                        isActive ? 'text-white' : item.highlight ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-300'
+                        isActive ? 'text-white' : item.highlight ? 'text-blue-600' : 'text-slate-500'
                       }`} />
                       <span>{item.label}</span>
                       {item.highlight && !isActive && (
-                        <span className="ml-auto rounded-md bg-blue-100 px-1.5 py-0.5 text-[9px] font-bold text-blue-700 dark:bg-blue-900/60 dark:text-blue-300">
+                        <span className="ml-auto rounded-md bg-blue-100 px-1.5 py-0.5 text-[9px] font-bold text-blue-700">
                           CORE
                         </span>
                       )}
@@ -754,17 +669,17 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
             </div>
 
             {/* Bottom Section: Theme Toggle & User Auth */}
-            <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
+            <div className="mt-4 pt-3 border-t border-slate-200 space-y-2">
               <div className="flex items-center justify-between px-1">
-                <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">Tema Tampilan</span>
+                <span className="text-xs font-semibold text-slate-600">Tema Tampilan</span>
                 <button
                   type="button"
                   onClick={toggleTheme}
-                  className="flex items-center gap-1.5 rounded-xl border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 transition-colors"
+                  className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                 >
                   {isDarkMode ? (
                     <>
-                      <Sun className="h-3.5 w-3.5 text-amber-400" />
+                      <Sun className="h-3.5 w-3.5 text-amber-500" />
                       <span>Mode Terang</span>
                     </>
                   ) : (
@@ -777,9 +692,9 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
               </div>
 
               {currentUser ? (
-                <div className="rounded-xl bg-slate-50 p-2.5 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                <div className="rounded-xl bg-slate-50 p-2.5 border border-slate-200">
                   <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Login sebagai</p>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                  <p className="text-xs font-bold text-slate-900 truncate">
                     {currentUser.email}
                   </p>
                   <button
@@ -788,7 +703,7 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
                       setIsMobileNavOpen(false);
                       await authService.signOut();
                     }}
-                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-white py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 dark:border-red-950 dark:bg-red-950/20 transition-colors"
+                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-white py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors"
                   >
                     <LogOut className="h-3.5 w-3.5" />
                     <span>Keluar Akun</span>
