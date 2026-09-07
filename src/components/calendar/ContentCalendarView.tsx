@@ -224,10 +224,13 @@ const ContentCalendarInner: React.FC = () => {
     setSelectedArticleIds(next);
   };
 
-  const handleDeleteArticle = (id: string, e: React.MouseEvent) => {
+  const handleDeleteArticle = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirm('Hapus artikel ini dari content calendar dan database Supabase?')) {
-      store.deleteArticle(id);
+      const result = await store.deleteArticle(id);
+      if (!result.success && result.error) {
+        alert(`Artikel dihapus secara lokal, namun gagal menghapus dari Supabase: ${result.error}`);
+      }
     }
   };
 
@@ -1089,8 +1092,8 @@ const ContentCalendarInner: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleCreateArticle} className="mt-4 space-y-3.5 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleCreateArticle} className="max-h-[70vh] overflow-y-auto px-4 pb-4 pt-3 text-xs space-y-3.5 sm:px-6 sm:pb-6">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="font-semibold text-slate-700 dark:text-slate-300">Hari (Slot)</label>
                   <input
@@ -1137,7 +1140,7 @@ const ContentCalendarInner: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="font-semibold text-slate-700 dark:text-slate-300">Content Cluster</label>
                   <input
@@ -1196,7 +1199,7 @@ const ContentCalendarInner: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSaveEditArticle} className="mt-4 space-y-3 text-xs">
+            <form onSubmit={handleSaveEditArticle} className="max-h-[70vh] overflow-y-auto px-4 pb-4 pt-3 text-xs space-y-3 sm:px-6 sm:pb-6">
               <div>
                 <label className="font-semibold text-slate-700 dark:text-slate-300">Judul Artikel</label>
                 <input
@@ -1219,7 +1222,7 @@ const ContentCalendarInner: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="font-semibold text-slate-700 dark:text-slate-300">Cluster</label>
                   <input
@@ -1305,63 +1308,65 @@ const ContentCalendarInner: React.FC = () => {
               </button>
             </div>
 
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 text-xs">
-              <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 space-y-2.5 dark:border-slate-800 dark:bg-slate-850/40">
-                <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <Target className="h-3.5 w-3.5 text-blue-600" />
-                  SEO Information
-                </span>
-                <div>
-                  <span className="text-slate-500 block text-[10px]">Target Keyword Utama:</span>
-                  <span className="font-bold text-slate-800 dark:text-slate-200">{selectedArticleDetail.primary_keyword}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500 block text-[10px]">Keyword Sekunder / LSI:</span>
-                  <span className="text-slate-700 dark:text-slate-300">{selectedArticleDetail.secondary_keywords || '-'}</span>
-                </div>
-                <div className="flex gap-4">
+            <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 text-xs">
+                <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 space-y-2.5 dark:border-slate-800 dark:bg-slate-850/40">
+                  <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <Target className="h-3.5 w-3.5 text-blue-600" />
+                    SEO Information
+                  </span>
                   <div>
-                    <span className="text-slate-500 block text-[10px]">Search Volume:</span>
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedArticleDetail.search_volume}</span>
+                    <span className="text-slate-500 block text-[10px]">Target Keyword Utama:</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200">{selectedArticleDetail.primary_keyword}</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[10px]">Tingkat Kompetisi:</span>
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedArticleDetail.competition}</span>
+                    <span className="text-slate-500 block text-[10px]">Keyword Sekunder / LSI:</span>
+                    <span className="text-slate-700 dark:text-slate-300">{selectedArticleDetail.secondary_keywords || '-'}</span>
+                  </div>
+                  <div className="flex gap-4">
+                    <div>
+                      <span className="text-slate-500 block text-[10px]">Search Volume:</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedArticleDetail.search_volume}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500 block text-[10px]">Tingkat Kompetisi:</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedArticleDetail.competition}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 space-y-2.5 dark:border-slate-800 dark:bg-slate-850/40">
-                <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <Tag className="h-3.5 w-3.5 text-emerald-600" />
-                  Content Strategy
-                </span>
-                <div>
-                  <span className="text-slate-500 block text-[10px]">Format Konten & GEO:</span>
-                  <span className="text-slate-700 dark:text-slate-300">{selectedArticleDetail.content_format}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500 block text-[10px]">Target CTA Konversi:</span>
-                  <span className="font-semibold text-emerald-700 dark:text-emerald-400">{selectedArticleDetail.cta}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500 block text-[10px]">URL Slug:</span>
-                  <span className="font-mono text-[11px] text-slate-700 dark:text-slate-300">{selectedArticleDetail.slug}</span>
+                <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 space-y-2.5 dark:border-slate-800 dark:bg-slate-850/40">
+                  <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <Tag className="h-3.5 w-3.5 text-emerald-600" />
+                    Content Strategy
+                  </span>
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">Format Konten & GEO:</span>
+                    <span className="text-slate-700 dark:text-slate-300">{selectedArticleDetail.content_format}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">Target CTA Konversi:</span>
+                    <span className="font-semibold text-emerald-700 dark:text-emerald-400">{selectedArticleDetail.cta}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[10px]">URL Slug:</span>
+                    <span className="font-mono text-[11px] text-slate-700 dark:text-slate-300">{selectedArticleDetail.slug}</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-800">
+            <div className="flex flex-col-reverse items-stretch gap-2 border-t border-slate-100 px-4 py-4 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-end sm:gap-3 sm:px-6">
               <button
                 type="button"
                 onClick={() => setSelectedArticleDetail(null)}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
+                className="rounded-lg border border-slate-200 px-4 py-2.5 text-xs font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 sm:py-2"
               >
                 Tutup
               </button>
               <a
                 href={`/prompt-builder?articleId=${selectedArticleDetail.id}`}
-                className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700"
+                className="flex items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-blue-700 sm:py-2"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>Buka di Prompt Builder</span>

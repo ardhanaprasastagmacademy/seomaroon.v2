@@ -171,7 +171,7 @@ export const PromptFormatterView: React.FC = () => {
       {/* 2-Column Split: Input Markdown vs Output Formatted Code */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Input Column */}
-        <div className="flex h-[calc(100vh-300px)] flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex min-h-[350px] lg:h-[calc(100vh-300px)] flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-slate-500" />
@@ -196,7 +196,7 @@ export const PromptFormatterView: React.FC = () => {
         </div>
 
         {/* Output Column */}
-        <div className="flex h-[calc(100vh-300px)] flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex min-h-[350px] lg:h-[calc(100vh-300px)] flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <Code2 className="h-4 w-4 text-blue-600" />

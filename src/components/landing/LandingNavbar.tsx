@@ -206,3 +206,4 @@ export const LandingNavbar: React.FC = () => {
     </>
   );
 };
+

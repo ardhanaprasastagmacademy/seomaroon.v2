@@ -278,13 +278,12 @@ const PromptBuilderStudioInner: React.FC<{ initialArticleId?: string }> = ({ ini
           </div>
         </div>
 
-        {/* Article Quick Switcher Dropdown */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">Pilih Artikel:</span>
           <select
             value={selectedArticleId}
             onChange={(e) => setSelectedArticleId(e.target.value)}
-            className="w-full max-w-sm truncate rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:border-blue-600 focus:outline-none dark:border-slate-800 dark:bg-slate-800 dark:text-white"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:border-blue-600 focus:outline-none dark:border-slate-800 dark:bg-slate-800 dark:text-white sm:max-w-sm"
           >
             {calendar.length > 0 ? (
               calendar.map((art) => (
@@ -331,7 +330,7 @@ const PromptBuilderStudioInner: React.FC<{ initialArticleId?: string }> = ({ ini
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         {/* ================= COLUMN 1: TEMPLATE SELECTOR (3 cols) ================= */}
         <div className={`space-y-4 xl:col-span-3 ${activeMobileTab !== 'TEMPLATE' ? 'hidden xl:block' : 'block'}`}>
-          <div className="flex h-[calc(100vh-210px)] flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex min-h-[60vh] flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900 xl:h-[calc(100vh-210px)]">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <Layers className="h-4 w-4 text-blue-600" />
@@ -410,7 +409,7 @@ const PromptBuilderStudioInner: React.FC<{ initialArticleId?: string }> = ({ ini
 
         {/* ================= COLUMN 2: INPUT FORM & AI ASSISTANTS (5 cols) ================= */}
         <div className={`space-y-4 xl:col-span-5 ${activeMobileTab !== 'FORM' ? 'hidden xl:block' : 'block'}`}>
-          <div className="flex h-[calc(100vh-210px)] flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex min-h-[60vh] flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900 xl:h-[calc(100vh-210px)]">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <Sliders className="h-4 w-4 text-blue-600" />
@@ -482,7 +481,7 @@ const PromptBuilderStudioInner: React.FC<{ initialArticleId?: string }> = ({ ini
 
         {/* ================= COLUMN 3: LIVE MARKDOWN PREVIEW (4 cols) ================= */}
         <div className={`space-y-4 xl:col-span-4 ${activeMobileTab !== 'PREVIEW' ? 'hidden xl:block' : 'block'}`}>
-          <div className="flex h-[calc(100vh-210px)] flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex min-h-[60vh] flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-soft dark:border-slate-800 dark:bg-slate-900 xl:h-[calc(100vh-210px)]">
             {/* Header & Metrics */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
