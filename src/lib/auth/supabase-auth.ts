@@ -179,6 +179,52 @@ class AuthService {
   }
 
   /**
+   * Send password reset email via Supabase
+   */
+  public async resetPasswordForEmail(email: string, redirectTo?: string) {
+    this.isLoading = true;
+    this.notify();
+
+    try {
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const redirectUrl = redirectTo || `${origin}/reset-password`;
+
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: redirectUrl,
+      });
+
+      if (error) throw error;
+      return data;
+    } finally {
+      this.isLoading = false;
+      this.notify();
+    }
+  }
+
+  /**
+   * Update user password (used during password recovery)
+   */
+  public async updateUserPassword(newPassword: string) {
+    this.isLoading = true;
+    this.notify();
+
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) throw error;
+      if (data.user) {
+        this.user = data.user;
+      }
+      return data;
+    } finally {
+      this.isLoading = false;
+      this.notify();
+    }
+  }
+
+  /**
    * Sign out
    */
   public async signOut() {
