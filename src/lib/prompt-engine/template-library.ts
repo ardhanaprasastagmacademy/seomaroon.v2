@@ -387,6 +387,113 @@ Kamu adalah seorang Direct-Response Copywriter elit, Commercial Strategist, dan 
 7. **Frictionless Urgent CTA:** Akhiri dengan instruksi pemesanan yang sangat mudah (hanya 2-3 langkah) disertai tombol/kontak langsung menuju WhatsApp atau form pemesanan resmi.
 
 Tuliskan artikel penjualan BOFU lengkap sekarang dalam format Markdown yang elegan, profesional, dan bertenaga tinggi.`
+  },
+  {
+    id: 'tpl-07',
+    number: 7,
+    name: 'Single Commercial Authority Article (B2B / E-Commerce 2026)',
+    category: 'E-Commerce',
+    version: '2.0',
+    is_active: true,
+    description: 'Prompt artikel otoritas komersial tunggal (Single Article B2B) dengan optimasi Search Intent Komersial, Google Discover, AI Overview (SGE), Answer Capsule, E-E-A-T, soft-selling ke brand, dan 5 prompt visual AI Hero Image.',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    input_schema: [
+      { key: 'industri', label: 'Industri / Niche Produk', required: true, default_source: 'PROJECT' },
+      { key: 'nama_website', label: 'Nama Brand / Website', required: true, default_source: 'PROJECT' },
+      { key: 'target_audience', label: 'Target Audience Persona', required: false, default_source: 'DERIVED' },
+      { key: 'article_title', label: 'Judul Artikel Komersial', required: true, default_source: 'EXCEL' },
+      { key: 'primary_keyword', label: 'Target Keyword Utama', required: true, default_source: 'EXCEL' },
+      { key: 'secondary_keywords', label: 'Supporting / Secondary Keywords', required: false, default_source: 'EXCEL' },
+      { key: 'slug', label: 'URL Slug', required: false, default_source: 'EXCEL' },
+      { key: 'cta', label: 'Target CTA Konversi', required: false, default_source: 'EXCEL' },
+    ],
+    template_markdown: `# TEMPLATE — SINGLE COMMERCIAL AUTHORITY ARTICLE
+
+Anda adalah seorang Senior B2B Content Strategist, SEO/AEO/GEO Architect, dan Commercial Copywriter ahli untuk industri {{industri}}.
+
+Tugas Anda adalah menyusun SATU artikel komprehensif berstandar otoritas tinggi dengan Search Intent Komersial yang secara proaktif mengedukasi sekaligus mengarahkan pembaca untuk melakukan pemesanan ke {{nama_website}}. Di akhir output, berikan 5 Prompt Visual AI Hero Image.
+
+## 1. PARAMETER ARTIKEL
+- **Judul Artikel:** {{article_title}}
+- **Target Keyword Utama:** {{primary_keyword}}
+- **Supporting / Secondary Keywords:** {{secondary_keywords}}
+- **URL Slug:** {{slug}}
+- **Nama Brand / Website:** {{nama_website}}
+- **Target Audience:** {{target_audience}}
+- **Search Intent:** Commercial (Komersial) & Transactional
+- **Target Call to Action (CTA):** {{cta}}
+- **Bahasa:** Indonesia (Profesional, otoritatif, persuasif, elegan)
+
+## 2. ATURAN PENULISAN & LARANGAN KETAT
+1. **Larangan Judul & Meta Title:**
+   - DILARANG KERAS menggunakan frasa "Panduan Lengkap" atau "Tips Lengkap" di Judul Artikel maupun Meta Title.
+   - Meta Title wajib memancing klik untuk Google Discover dengan intensi komersial, panjang 55-60 karakter.
+   - Meta Description wajib padat, menonjolkan nilai jual, maksimal 150 karakter dengan CTA.
+2. **Aturan Pembuka (Answer Capsule & AI Overview):**
+   - Tepat di bawah H1, tuliskan **ANSWER CAPSULE**: 20-25 kata yang langsung menjawab inti kebutuhan pembaca secara standalone dan mengandung {{primary_keyword}}.
+   - 3 kalimat pertama paragraf pembuka HARUS langsung, lugas, dan komprehensif menjawab pertanyaan umum terkait topik (Teknik Piramida Terbalik).
+   - Setelah paragraf pembuka, sertakan **Ringkasan Inti** dalam 3-5 bullet points.
+3. **Format & Gaya Artikel:**
+   - Susun dalam format Artikel Reguler/Normal yang mengalir logis (BUKAN listicle bernomor).
+   - Minimal 40% heading H2/H3 berbentuk pertanyaan natural yang sering diketik oleh {{target_audience}}.
+   - Setiap H2 diawali jawaban langsung (standalone, 20-25 kata) sebelum pembahasan mendalam.
+   - Panjang artikel minimal 1.500 kata.
+   - Dilarang keras membahas atau merekomendasikan vendor lain di luar {{nama_website}}.
+4. **Data Density & Trust Signals (E-E-A-T):**
+   - Wajib minimal 2 data statistik spesifik industri {{industri}}, lengkap sumber dan periode.
+   - Sertakan minimal 1 tabel komparasi spesifikasi/fitur untuk memudahkan scannability.
+5. **Soft-Selling & Call-to-Action:**
+   - Padukan edukasi dengan nilai jual (value proposition) {{nama_website}}.
+   - Selipkan CTA natural dan persuasif di tengah pembahasan dan di akhir artikel.
+6. **FAQ & Kesimpulan:**
+   - Sertakan minimal 5 FAQ seputar spesifikasi produk/layanan, pemesanan jumlah besar (B2B), garansi, dan pengiriman/pengerjaan.
+   - Tutup dengan Kesimpulan Praktis dan CTA final.
+
+## 3. FORMAT METADATA WAJIB (Di Awal Konten)
+\`\`\`
+Meta Title: <55-60 karakter, komersial, TANPA kata Panduan/Tips Lengkap>
+Slug: <{{slug}}>
+Meta Description: <maks 150 karakter, kalimat aktif bernilai jual + CTA>
+Focus Keyphrase: <{{primary_keyword}}>
+Search Intent: Commercial
+Answer Intent: Rekomendasi / Spesifikasi Produk / Solusi B2B
+Primary Entity: <entitas utama produk/layanan>
+Secondary Entities: <3-5 entitas pendukung>
+Query Fan-Out: <3 variasi pertanyaan AI Overview>
+Audience: {{target_audience}}
+Suggested Schema: Article, Product, FAQPage
+Author: Tim Spesialis {{nama_website}}
+Last Updated: <YYYY-MM-DD>
+Images:
+- <nama-file-01>.webp | Alt: <alt text 1>
+- <nama-file-02>.webp | Alt: <alt text 2>
+\`\`\`
+
+## 4. FORMAT GAMBAR PENDUKUNG ARTIKEL (Wajib Disisipkan di Isi Artikel)
+
+Sisipkan tepat 2 gambar pendukung di dalam isi artikel (bukan di prompt visual AI), dengan ketentuan:
+
+- **Jumlah & Posisi:** 2 gambar, ditempatkan di dua section H2 yang paling relevan dengan isi gambar (bukan berdekatan/di awal saja).
+- **Format file:** .webp.
+- **Ukuran file:** di bawah 100 KB per gambar (untuk menjaga skor page speed/Core Web Vitals — hindari elemen visual yang membebani loading, khususnya di atas fold).
+- **Relevansi:** gambar harus sesuai konteks paragraf tempatnya disisipkan (mis. produk {{industri}} yang sedang dibahas di section tersebut), bukan gambar generik.
+- **Penamaan file:** deskriptif dan mengandung keyword, format kebab-case, contoh: {{slug}}-01.webp, {{slug}}-02.webp.
+- **Alt text:** deskriptif, natural, mengandung {{primary_keyword}} atau secondary keyword yang relevan, maksimal 125 karakter.
+- **Format Markdown:** Sisipkan dalam Markdown dengan format: \`![<alt text>](<nama-file>.webp)\`
+- **Metadata:** Cantumkan baris Images di bagian METADATA (section 3) sesuai data gambar yang disisipkan.
+
+## 5. FORMAT PROMPT VISUAL AI (Wajib di Akhir Artikel)
+
+Tambahkan 5 prompt bahasa Inggris sangat detail untuk AI Image Generator dengan standar:
+
+- **Format:** Cinematic commercial product photography, 8k resolution, photorealistic, sharp focus HERO image.
+- **Teks Produk:** Instruksikan AI mencetak teks/logo "{{nama_website}}" secara natural (diembos, digrafir, atau label minimalis elegan) — sesuaikan medium dengan jenis produk {{industri}}.
+- **Nuansa:** Lingkungan bisnis/korporat modern yang relevan dengan {{industri}}, pencahayaan alami, premium dan minimalis.
+- **ATURAN MUTLAK:** TIDAK BOLEH ADA ELEMEN BATIK.
+- **ATURAN MUTLAK:** DILARANG KERAS MENAMPILKAN WAJAH ATAU SOSOK MANUSIA (fokus hanya pada produk dan lingkungan).
+
+Tuliskan artikel lengkap sekarang dalam format Markdown 100% yang rapi dan siap dipublikasikan.`
   }
 ];
 

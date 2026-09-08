@@ -36,9 +36,9 @@ export function detectSchemaFromMarkdown(markdown: string): TemplateFieldSchema[
     const isRequired = ['article_title', 'primary_keyword', 'language', 'target_location'].includes(key);
     let defaultSource: FieldSource = 'MANUAL';
 
-    if (['article_title', 'primary_keyword', 'supporting_keywords', 'slug', 'content_type', 'cta', 'funnel_stage', 'product_category'].includes(key)) {
+    if (['article_title', 'primary_keyword', 'supporting_keywords', 'secondary_keywords', 'slug', 'content_type', 'cta', 'funnel_stage', 'product_category'].includes(key)) {
       defaultSource = 'EXCEL';
-    } else if (['tone_of_voice', 'tone', 'language', 'business_name', 'target_location', 'estimated_length'].includes(key)) {
+    } else if (['tone_of_voice', 'tone', 'language', 'business_name', 'nama_website', 'brand_name', 'industri', 'industry', 'target_location', 'estimated_length'].includes(key)) {
       defaultSource = 'PROJECT';
     } else if ([
       'search_intent', 'query_fan_out', 'outline_structure', 'target_audience', 'schema_markup',
@@ -155,8 +155,18 @@ export function autoMapTemplateFields(
         sources[key] = 'PROJECT';
         continue;
       }
-      if (key === 'business_name' && project.business_name) {
-        values[key] = project.business_name;
+      if ((key === 'business_name' || key === 'nama_website' || key === 'brand_name') && (project.business_name || project.name)) {
+        values[key] = project.business_name || project.name;
+        sources[key] = 'PROJECT';
+        continue;
+      }
+      if ((key === 'industri' || key === 'industry') && project.industry) {
+        values[key] = project.industry;
+        sources[key] = 'PROJECT';
+        continue;
+      }
+      if ((key === 'cta' || key === 'conversion_cta') && project.default_cta) {
+        values[key] = project.default_cta;
         sources[key] = 'PROJECT';
         continue;
       }

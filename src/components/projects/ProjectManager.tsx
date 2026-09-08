@@ -18,6 +18,7 @@ import {
   Layers,
   Search,
   Sparkles,
+  RefreshCw,
   X
 } from 'lucide-react';
 

@@ -210,11 +210,19 @@ class AppStore {
       if (savedTemplates) {
         try {
           const parsed = JSON.parse(savedTemplates);
-          if (Array.isArray(parsed) && (parsed.length > 6 || parsed.some((t: any) => t.id === 'tpl-40' || t.id === 'tpl-38') || !parsed.some((t: any) => t.id === 'tpl-01'))) {
+          if (Array.isArray(parsed)) {
+            const existingIds = new Set(parsed.map((t: any) => t.id));
+            const hasMissing = INITIAL_PROMPT_TEMPLATES.some(t => !existingIds.has(t.id));
+            const hasOutdatedTpl07 = parsed.some((t: any) => t.id === 'tpl-07' && !t.template_markdown.includes('FORMAT GAMBAR PENDUKUNG ARTIKEL'));
+            if (hasMissing || hasOutdatedTpl07 || parsed.some((t: any) => t.id === 'tpl-40' || t.id === 'tpl-38') || !parsed.some((t: any) => t.id === 'tpl-01')) {
+              this.templates = [...INITIAL_PROMPT_TEMPLATES];
+              this.saveTemplatesToStorage();
+            } else {
+              this.templates = parsed;
+            }
+          } else {
             this.templates = [...INITIAL_PROMPT_TEMPLATES];
             this.saveTemplatesToStorage();
-          } else {
-            this.templates = parsed;
           }
         } catch {
           this.templates = [...INITIAL_PROMPT_TEMPLATES];
