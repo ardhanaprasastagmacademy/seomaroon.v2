@@ -27,10 +27,10 @@ export const AppSidebar: React.FC<SidebarProps> = ({ currentPath = '' }) => {
   ];
 
   return (
-    <aside className="fixed inset-y-0 left-0 top-16 z-30 hidden w-60 border-r border-slate-200 bg-white px-3 py-4 md:flex md:flex-col md:justify-between shadow-sm">
+    <aside className="fixed inset-y-0 left-0 top-16 z-30 hidden w-60 border-r border-slate-200 bg-white px-3 py-4 md:flex md:flex-col md:justify-between shadow-sm dark:border-slate-800 dark:bg-slate-900/95 dark:backdrop-blur">
       {/* Navigation Links */}
       <div className="space-y-1">
-        <div className="px-3 pb-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+        <div className="px-3 pb-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider dark:text-slate-500">
           Main Navigation
         </div>
         {navItems.map((item) => {
@@ -45,16 +45,16 @@ export const AppSidebar: React.FC<SidebarProps> = ({ currentPath = '' }) => {
                 isActive
                   ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25'
                   : item.highlight
-                  ? 'text-blue-600 hover:bg-blue-50'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  ? 'text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/40'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/80 dark:hover:text-slate-100'
               }`}
             >
               <Icon className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                isActive ? 'text-white' : item.highlight ? 'text-blue-600' : 'text-slate-500'
+                isActive ? 'text-white' : item.highlight ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-100'
               }`} />
               <span>{item.label}</span>
               {item.highlight && !isActive && (
-                <span className="ml-auto rounded-md bg-blue-100 px-1.5 py-0.5 text-[9px] font-bold text-blue-700">
+                <span className="ml-auto rounded-md bg-blue-100 px-1.5 py-0.5 text-[9px] font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-400">
                   CORE
                 </span>
               )}
@@ -64,19 +64,19 @@ export const AppSidebar: React.FC<SidebarProps> = ({ currentPath = '' }) => {
       </div>
 
       {/* Footer / Quick Info */}
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-850/60">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-bold text-slate-700">SEO OS v1.0</span>
+          <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">SEO OS v1.0</span>
           <span className="flex h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20" />
         </div>
-        <p className="mt-1 text-[10px] text-slate-500 leading-relaxed">
+        <p className="mt-1 text-[10px] text-slate-500 leading-relaxed dark:text-slate-400">
           Tersinkronisasi otomatis dengan database Supabase Cloud.
         </p>
-        <div className="mt-2.5 flex items-center justify-between border-t border-slate-200 pt-2">
-          <span className="text-[10px] font-medium text-slate-500">
+        <div className="mt-2.5 flex items-center justify-between border-t border-slate-200 pt-2 dark:border-slate-800">
+          <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
             Status Database
           </span>
-          <span className="text-[10px] font-semibold text-emerald-600">
+          <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
             Cloud Connected
           </span>
         </div>

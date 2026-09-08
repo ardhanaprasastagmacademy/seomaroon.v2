@@ -581,10 +581,10 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
           />
 
           {/* Drawer Panel */}
-          <aside className="fixed inset-y-0 left-0 z-50 flex h-full max-h-screen w-[85vw] max-w-xs sm:w-80 flex-col justify-between border-r border-slate-200 bg-white px-4 py-4 shadow-2xl animate-in slide-in-from-left duration-250">
+          <aside className="fixed inset-y-0 left-0 z-50 flex h-full max-h-screen w-[85vw] max-w-xs sm:w-80 flex-col justify-between border-r border-slate-200 bg-white px-4 py-4 shadow-2xl animate-in slide-in-from-left duration-250 dark:border-slate-800 dark:bg-slate-900">
             <div className="flex flex-1 min-h-0 flex-col overflow-y-auto pr-1">
               {/* Drawer Top Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
                 <a 
                   href="/dashboard" 
                   onClick={() => setIsMobileNavOpen(false)}
@@ -594,45 +594,45 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
                     <Sparkles className="h-4 w-4" />
                   </div>
                   <div>
-                    <span className="text-sm font-extrabold text-blue-600">SEO PROMPT</span>
-                    <span className="ml-1 text-sm font-semibold text-slate-800">STUDIO</span>
+                    <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400">SEO PROMPT</span>
+                    <span className="ml-1 text-sm font-semibold text-slate-800 dark:text-slate-200">STUDIO</span>
                   </div>
                 </a>
                 <button
                   type="button"
                   onClick={() => setIsMobileNavOpen(false)}
                   aria-label="Tutup Menu"
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               {/* Active Project Card */}
-              <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
+              <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-800/60">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Project Aktif</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Project Aktif</span>
                   <a
                     href="/projects"
                     onClick={() => setIsMobileNavOpen(false)}
-                    className="text-[10px] font-semibold text-blue-600 hover:underline"
+                    className="text-[10px] font-semibold text-blue-600 hover:underline dark:text-blue-400"
                   >
                     Kelola Semua
                   </a>
                 </div>
-                <p className="mt-1 text-xs font-bold text-slate-900 truncate">
+                <p className="mt-1 text-xs font-bold text-slate-900 dark:text-white truncate">
                   {activeProject?.name || 'Belum Ada Project'}
                 </p>
-                <div className="mt-0.5 flex items-center gap-1.5 text-[10px] text-slate-500">
+                <div className="mt-0.5 flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400">
                   <span className="truncate">{activeProject?.industry || 'General SEO'}</span>
                   <span>•</span>
-                  <span className="text-blue-600 font-semibold">{calendar.length} Artikel</span>
+                  <span className="text-blue-600 dark:text-blue-400 font-semibold">{calendar.length} Artikel</span>
                 </div>
               </div>
 
               {/* Main Nav Items */}
               <div className="mt-4 space-y-1">
-                <div className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                   Menu Aplikasi
                 </div>
                 {navItems.map((item) => {
@@ -648,16 +648,16 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
                         isActive
                           ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
                           : item.highlight
-                          ? 'text-blue-600 hover:bg-blue-50'
-                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                          ? 'text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/40'
+                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/80 dark:hover:text-white'
                       }`}
                     >
                       <Icon className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                        isActive ? 'text-white' : item.highlight ? 'text-blue-600' : 'text-slate-500'
+                        isActive ? 'text-white' : item.highlight ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-100'
                       }`} />
                       <span>{item.label}</span>
                       {item.highlight && !isActive && (
-                        <span className="ml-auto rounded-md bg-blue-100 px-1.5 py-0.5 text-[9px] font-bold text-blue-700">
+                        <span className="ml-auto rounded-md bg-blue-100 px-1.5 py-0.5 text-[9px] font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-400">
                           CORE
                         </span>
                       )}
@@ -669,22 +669,22 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
             </div>
 
             {/* Bottom Section: Theme Toggle & User Auth */}
-            <div className="mt-4 pt-3 border-t border-slate-200 space-y-2">
+            <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
               <div className="flex items-center justify-between px-1">
-                <span className="text-xs font-semibold text-slate-600">Tema Tampilan</span>
+                <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Tema Tampilan</span>
                 <button
                   type="button"
                   onClick={toggleTheme}
-                  className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-750 transition-colors"
                 >
                   {isDarkMode ? (
                     <>
-                      <Sun className="h-3.5 w-3.5 text-amber-500" />
+                      <Sun className="h-3.5 w-3.5 text-amber-400" />
                       <span>Mode Terang</span>
                     </>
                   ) : (
                     <>
-                      <Moon className="h-3.5 w-3.5 text-slate-600" />
+                      <Moon className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
                       <span>Mode Gelap</span>
                     </>
                   )}
@@ -692,9 +692,9 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
               </div>
 
               {currentUser ? (
-                <div className="rounded-xl bg-slate-50 p-2.5 border border-slate-200">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Login sebagai</p>
-                  <p className="text-xs font-bold text-slate-900 truncate">
+                <div className="rounded-xl bg-slate-50 p-2.5 border border-slate-200 dark:border-slate-800 dark:bg-slate-800/60">
+                  <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Login sebagai</p>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
                     {currentUser.email}
                   </p>
                   <button
@@ -703,7 +703,7 @@ export const AppNavbar: React.FC<{ activePage?: string }> = ({ activePage }) => 
                       setIsMobileNavOpen(false);
                       await authService.signOut();
                     }}
-                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-white py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors"
+                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-white py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 dark:border-red-900/50 dark:bg-slate-900 dark:text-red-400 dark:hover:bg-red-950/40 transition-colors"
                   >
                     <LogOut className="h-3.5 w-3.5" />
                     <span>Keluar Akun</span>

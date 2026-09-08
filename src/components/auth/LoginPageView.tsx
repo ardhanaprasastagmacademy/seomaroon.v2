@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { authService } from '@/lib/auth/supabase-auth';
-import { 
-  Sparkles, 
-  ShieldCheck, 
-  Loader2, 
-  Lock, 
-  CheckCircle2, 
-  Mail, 
+import {
+  Sparkles,
+  ShieldCheck,
+  Loader2,
+  Lock,
+  CheckCircle2,
+  Mail,
   ArrowRight,
   UserPlus,
   LogIn,
@@ -152,8 +152,8 @@ export const LoginPageView: React.FC = () => {
             </h2>
             <p className="mt-1.5 text-xs text-slate-500 leading-relaxed">
               {mode === 'login'
-                ? 'Masuk untuk mengakses project dan kalender pribadi Anda.'
-                : 'Daftar untuk mengelola project SEO yang terisolasi khusus akun Anda.'}
+                ? ''
+                : ''}
             </p>
           </div>
 
@@ -166,11 +166,10 @@ export const LoginPageView: React.FC = () => {
                 setErrorMsg(null);
                 setSuccessMsg(null);
               }}
-              className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-all ${
-                mode === 'login'
-                  ? 'bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-white'
-                  : 'text-slate-500 hover:text-slate-900 dark:text-slate-400'
-              }`}
+              className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-all ${mode === 'login'
+                ? 'bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-white'
+                : 'text-slate-500 hover:text-slate-900 dark:text-slate-400'
+                }`}
             >
               <LogIn className="h-3.5 w-3.5" />
               <span>Login (Masuk)</span>
@@ -183,11 +182,10 @@ export const LoginPageView: React.FC = () => {
                 setErrorMsg(null);
                 setSuccessMsg(null);
               }}
-              className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-all ${
-                mode === 'register'
-                  ? 'bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-white'
-                  : 'text-slate-500 hover:text-slate-900 dark:text-slate-400'
-              }`}
+              className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-all ${mode === 'register'
+                ? 'bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-white'
+                : 'text-slate-500 hover:text-slate-900 dark:text-slate-400'
+                }`}
             >
               <UserPlus className="h-3.5 w-3.5" />
               <span>Daftar Akun</span>
@@ -196,11 +194,10 @@ export const LoginPageView: React.FC = () => {
 
           {/* Alerts */}
           {errorMsg && (
-            <div className={`mt-4 rounded-2xl border p-3.5 text-xs ${
-              isEmailNotConfirmed 
-                ? 'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200'
-                : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300'
-            }`}>
+            <div className={`mt-4 rounded-2xl border p-3.5 text-xs ${isEmailNotConfirmed
+              ? 'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200'
+              : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300'
+              }`}>
               <div className="flex items-start gap-2.5">
                 <AlertCircle className={`h-4 w-4 flex-shrink-0 mt-0.5 ${isEmailNotConfirmed ? 'text-amber-600' : 'text-red-500'}`} />
                 <div className="flex-1">
@@ -208,7 +205,7 @@ export const LoginPageView: React.FC = () => {
                     {isEmailNotConfirmed ? 'Email Belum Dikonfirmasi' : 'Kendala Autentikasi'}
                   </p>
                   <p className="mt-1 text-[11px] leading-relaxed">{errorMsg}</p>
-                  
+
                   {isEmailNotConfirmed && (
                     <div className="mt-3 flex flex-col gap-2 pt-2 border-t border-amber-200/60 dark:border-amber-800/40">
                       <button
