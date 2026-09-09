@@ -104,7 +104,7 @@ const TemplateLibraryViewInner: React.FC = () => {
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            6 Master Template SEO, AEO (Perplexity/ChatGPT), dan GEO (AI Overviews) terpadu dengan standar industri internasional.
+            5 Master Template SEO, AEO (Perplexity/ChatGPT), dan GEO (AI Overviews) terpadu dengan standar industri internasional.
           </p>
         </div>
 

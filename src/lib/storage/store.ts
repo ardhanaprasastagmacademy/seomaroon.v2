@@ -213,8 +213,10 @@ class AppStore {
           if (Array.isArray(parsed)) {
             const existingIds = new Set(parsed.map((t: any) => t.id));
             const hasMissing = INITIAL_PROMPT_TEMPLATES.some(t => !existingIds.has(t.id));
-            const hasOutdatedTpl07 = parsed.some((t: any) => t.id === 'tpl-07' && !t.template_markdown.includes('FORMAT GAMBAR PENDUKUNG ARTIKEL'));
-            if (hasMissing || hasOutdatedTpl07 || parsed.some((t: any) => t.id === 'tpl-40' || t.id === 'tpl-38') || !parsed.some((t: any) => t.id === 'tpl-01')) {
+            const isDifferentLength = parsed.length !== INITIAL_PROMPT_TEMPLATES.length;
+            const hasWrongFirst = parsed[0]?.name !== INITIAL_PROMPT_TEMPLATES[0]?.name;
+            const hasOldIds = parsed.some((t: any) => t.id === 'tpl-06' || t.id === 'tpl-07' || t.id === 'tpl-40' || t.id === 'tpl-38');
+            if (hasMissing || isDifferentLength || hasWrongFirst || hasOldIds || !parsed.some((t: any) => t.id === 'tpl-01')) {
               this.templates = [...INITIAL_PROMPT_TEMPLATES];
               this.saveTemplatesToStorage();
             } else {
